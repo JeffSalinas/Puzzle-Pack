@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import TrickyApp from './tricky_tricky/tricky_app.jsx';
-import QuadApp from './quadrilateral_bro/quad_app.jsx'
+import Route from './router.jsx';
 
-// ReactDOM.render(<TrickyApp />, document.getElementById('root'));
-ReactDOM.render(<QuadApp />, document.getElementById('root'));
+ReactDOM.render(<Route />, document.getElementById('root'));
