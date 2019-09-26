@@ -1,0 +1,146 @@
+#container {
+  border: 1px solid black;
+  height: 288px;
+  width: 432px;
+}
+
+#quadGameBoard {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  border: 1px solid black;
+  height: 288px;
+  width: 432px;
+}
+
+#gameBoard {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  height: 261px;
+  width: 432px;
+  align-content: space-around;
+}
+
+#bottomSpace {
+  background-color: grey;
+  width: 432px;
+  height:27px;
+  align-self: flex-end;
+}
+
+#booyah{
+  position: absolute;
+  align-self: flex-end;
+  z-index: 1;
+}
+
+.rows {
+  height: 40px;
+  width: 432px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.blocks {
+  width: 40px;
+  height: 40px;
+}
+
+#topSelect {
+  margin:-3px;
+  border: 3px solid red;
+  border-left: 3px solid red;
+  border-right: 3px solid red;
+  background: red;
+}
+
+#bottomSelect {
+  margin:-3px;
+  border: 3px solid red;
+  border-left: 3px solid red;
+  border-right: 3px solid red;
+  background: red;
+}
+
+.popupStyle {
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 52px 116px;
+  position: absolute;
+  width: 200px;
+  height: 150px;
+  background-color: lightgrey;
+  border-radius: 5px;
+  border: 3px solid black;
+  z-index: 1;
+}
+
+.title {
+  align-self: flex-start;
+  text-align: center;
+  position: absolute;
+  margin: -1px;
+  width: 201px;
+  height: 30px;
+  color: white;
+  background-color: black;
+}
+
+#text {
+  align-self: center;
+  position: absolute;
+  font-weight: bold;
+  width: 150px;
+  font-size: 20px;
+  padding: 0 25px;
+}
+
+h3 {
+  display: block;
+  font-size: 1.5em;
+  margin: 0;
+  font-weight: bold;
+}
+
+.pswInstruction {
+  align-self: flex-end;
+  margin: 5px 0;
+  width: 201px;
+  text-align: center;
+}
+
+input {
+  border: 2px solid black;
+  width: 145px;
+}
+
+#instruction {
+  align-self: flex-end;
+  margin: 5px 0;
+  width: 201px;
+  text-align: center;
+}
+
+#text2 {
+  align-self: center;
+  text-align: center;
+  position: absolute;
+  font-weight: bold;
+  width: 150px;
+  font-size: 20px;
+  padding: 0 25px;
+}
+
+.instructTitles {
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+ul {
+  margin: 5px 0;
+}
+
+li {
+  margin: 5px 0;
+}
