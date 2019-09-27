@@ -5,13 +5,16 @@ function Selector (props) {
 
   return (
     <div>
-      <div id="quadGameBoard">
-        <NavLink to='/quadLanding'>
-          <button>Quadrilateral Bro</button>
-        </NavLink>
-        <NavLink to='/trickyLanding'>
-        <button>Tricky Tricky</button>
-        </NavLink>
+      <div id="selectorGameBoard">
+        <h1>
+          Choose Your Adventure!
+        </h1>
+          <NavLink to='/QuadrilateralBro'>
+            <img className="selectorButtons" src="./images/quadButton.png"></img>
+          </NavLink>
+          <NavLink to='/TrickyTricky'>
+            <img className="selectorButtons" src="./images/trickyButton.png"></img>
+          </NavLink>
       </div>
     </div>
   )

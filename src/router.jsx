@@ -8,8 +8,8 @@ function RouteManager() {
   return (
     <Router>
       <Route exact path="/" component={Selector} />
-      <Route path="/quadLanding" component={QuadApp} />
-      <Route path="/trickyLanding" component={TrickyApp} />
+      <Route path="/QuadrilateralBro" component={QuadApp} />
+      <Route path="/TrickyTricky" component={TrickyApp} />
     </Router>
   )
 }
