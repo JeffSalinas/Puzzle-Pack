@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { BrowserRouter as Redirect, NavLink } from "react-router-dom";
 import Row from './components/row.jsx';
 import Popup from './components/popup.jsx';
 import Password from './components/password.jsx';
@@ -746,7 +747,7 @@ class App extends Component {
 
     render() {
         return (
-            <div>
+            <div className="viewPort">
                 <div id="quadGameBoard">
                     {this.state.start ? <Popup currentlvl={this.state.level + 1} level={levels[levelArray[this.state.level]]} /> : null}
                     {this.state.pswdScreen ? <Password /> : null}
@@ -760,6 +761,9 @@ class App extends Component {
                         )
                     })}
                 </div>
+                <NavLink to='/'>
+                    <button className="homebutton">Home</button>
+                </NavLink>
                 <p className="instructTitles">Objective:</p>
                 <ul>
                     <li>

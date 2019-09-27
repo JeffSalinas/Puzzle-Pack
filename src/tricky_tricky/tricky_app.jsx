@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { BrowserRouter as Redirect, NavLink } from "react-router-dom";
 import levels from './components/Levels';
 import Row from './components/row.jsx';
 import Popup from './components/popup.jsx';
@@ -11,7 +12,7 @@ class App extends Component {
         super(props)
         this.state = {
             start: true,
-            level: 0,
+            level: 19,
             boardView: [],
             selectTop: { 
                 row: 1,
@@ -19,7 +20,9 @@ class App extends Component {
             },
             move: 0,
             pswdScreen: true,
-            lastPasswordKey: ''
+            lastPasswordKey: '',
+            outOfMoves: false,
+            booyah: true
         };
     }
 
@@ -94,13 +97,13 @@ class App extends Component {
     move(event) {
         if (this.state.pswdScreen) {
             if (this.state.start) {
-                this.setState(() => { return { pswdScreen: false }; });
+                this.setState(() => { return { pswdScreen: false}; });
             }
             return;
         }
         if (this.state.start) {
             if (this.state.start) {
-                this.setState(() => { return { start: false }; });
+                this.setState(() => { return { start: false, booyah: true  }; });
             }
             if (event.key === 'Enter') {
                 return;
@@ -302,7 +305,7 @@ class App extends Component {
             this.setState({ level: this.state.level + 1, start: true, move: 0 }, () => this.mountLevel());
             return;
         } else if (this.state.move >= levels[levelArray[this.state.level]].moves) {
-            this.setState({ move: 0, start: true, outOfMoves: true }, () => {
+            this.setState({ move: 0, start: true, outOfMoves: true, booyah: false }, () => {
                 setTimeout(() => {
                     this.setState({ outOfMoves: false }, () => { 
                         this.mountLevel();
@@ -316,7 +319,7 @@ class App extends Component {
     render() {
 
         return (
-            <div>
+            <div className="viewPort">
                 <div id="container">
                     { this.state.start ? <Popup level={levels[levelArray[this.state.level]]} currentlvl={this.state.level + 1}/> : null }
                     {this.state.outOfMoves ? <Out /> : null }
@@ -333,26 +336,33 @@ class App extends Component {
                             )
                         })}
                     </div>
-                    { this.state.level < 8 ? 
+                    {this.state.level < 8 ? 
                     <p id="booyah" style={{
                         fontSize: `${this.state.level * 2}px`, margin: `-${this.state.level - 5}px 0` }}>
-                        {this.state.start && this.state.level !== 0 ? 'booyah!' : null}
+                            {this.state.start && this.state.level && this.state.booyah !== 0 ? 'booyah!' : null}
                     </p> : 
                         this.state.level >= 8 && this.state.level < 15  ? 
                         <p id="booyah" style={{
                             fontSize: `${this.state.level * 2}px`, margin: `-${this.state.level - 5}px 0`
                         }}>
-                            {this.state.start ? 'BOOYAH!!' : null}
-                        </p> :
+                                {this.state.start && this.state.booyah ? 'BOOYAH!!' : null}
+                            </p> : this.state.level >= 15 && this.state.level < 22 ? 
                             <p id="booyah" style={{
                                 fontSize: `${this.state.level * 2}px`, margin: `-${this.state.level - 5}px 0`, fontWeight: 'bold'
                             }}>
-                                {this.state.start ? 'BOOOOYAH!!!!!' : null}
-                            </p>
+                                    {this.state.start && this.state.booyah ? 'BOOOOYAH!!!!!' : null}
+                                </p> :  <p id="booyah" style={{
+                                    fontSize: `${this.state.level * 3}px`, margin: `-${this.state.level - 5}px 0`, fontWeight: 'bold'
+                                }}>
+                                    {this.state.start && this.state.booyah ? 'BOOOOYAH!!!!!' : null}
+                                </p>
                     }
 
                     <div id="bottomSpace"></div>
                 </div>
+                    <NavLink to='/'>    
+                        <button className="homebutton">Home</button>
+                    </NavLink>
 
                 <p className="instructTitles">Objective:</p> 
                 <ul>

@@ -5,17 +5,19 @@ const Password = (props) => {
 
   return (
     ReactDOM.createPortal(
-      <div className="popupStyle">
-        <div className="title">
-          <h3>Tricky Tricky!</h3>
+      <div className="popupContainer">
+        <div className="popupStyle">
+          <div className="title">
+            <h3>Tricky Tricky!</h3>
+          </div>
+          <div id="text">
+            Password:
+            <input></input>
+          </div>
+          <p className="pswInstruction">{'Password ? jumpToLvl() : '}<br></br>
+          {'*Press Any Key To Begin*'}
+          </p>
         </div>
-        <div id="text">
-          Password:
-          <input></input>
-        </div>
-        <p className="pswInstruction">{'Password ? jumpToLvl() : '}<br></br>
-        {'*Press Any Key To Begin*'}
-        </p>
       </div>,
       document.getElementById('password')
     )

@@ -1,3 +1,8 @@
+.viewPort {
+  margin: auto;
+  width: 50%
+}
+
 #container {
   border: 1px solid black;
   height: 288px;
@@ -24,13 +29,15 @@
 
 #bottomSpace {
   background-color: grey;
-  width: 432px;
+  width: 433px;
   height:27px;
   align-self: flex-end;
 }
 
 #booyah{
   position: absolute;
+  text-align: center;
+  width: 433px;
   align-self: flex-end;
   z-index: 1;
 }
@@ -61,6 +68,11 @@
   border-left: 3px solid red;
   border-right: 3px solid red;
   background: red;
+}
+
+.popupContainer {
+  margin: auto;
+  width: 50%
 }
 
 .popupStyle {
@@ -177,4 +189,11 @@ li {
   border: 4px solid red;
   margin: 0px;
 
+}
+
+.homebutton {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 5px 188px;
+  align-self: center;
 }

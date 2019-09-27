@@ -4,7 +4,7 @@ import { BrowserRouter as Redirect, NavLink } from "react-router-dom";
 function Selector (props) {
 
   return (
-    <div>
+    <div className="viewPort">
       <div id="selectorGameBoard">
         <h1>
           Choose Your Adventure!
