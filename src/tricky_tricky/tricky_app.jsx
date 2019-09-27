@@ -12,7 +12,7 @@ class App extends Component {
         super(props)
         this.state = {
             start: true,
-            level: 19,
+            level: 0,
             boardView: [],
             selectTop: { 
                 row: 1,
@@ -39,21 +39,25 @@ class App extends Component {
 
     passwordHandler(event) {
         if (event.key === 'Enter') {
-            if (this.state.lastPasswordKey === 'Enter') {
-                this.move(event);
-            }
 
             for (let lvl = 0; lvl < levelArray.length; lvl++) {
                 if (levels[levelArray[lvl]].password === event.target.value) {
                     event.target.value = 'Kubernetes!'
 
                     setTimeout(() => {
-                        this.setState({level: lvl, pswdScreen: false}, () => {
-                            this.mountLevel();
-                        })
+                        this.setState(() => {
+                            return {level: lvl, pswdScreen: false}
+                        });
+
+                        this.mountLevel();
+
                     }, 500)
                     return;
                 }
+            }
+
+            if (this.state.lastPasswordKey === 'Enter') {
+                this.move(event);
             }
 
             event.target.value = ''
@@ -301,8 +305,14 @@ class App extends Component {
                 win = false;
             }
         }
+
         if (win) {
+            if (this.state.level === 24) {
+                window.location.href='/';
+                return;
+            }
             this.setState({ level: this.state.level + 1, start: true, move: 0 }, () => this.mountLevel());
+
             return;
         } else if (this.state.move >= levels[levelArray[this.state.level]].moves) {
             this.setState({ move: 0, start: true, outOfMoves: true, booyah: false }, () => {
