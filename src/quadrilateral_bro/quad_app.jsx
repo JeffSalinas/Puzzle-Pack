@@ -39,21 +39,51 @@ class App extends Component {
         this.move = this.move.bind(this);
     }
 
+    // componentWillMount() {
+    //     this.mountLevel();
+    //     document.addEventListener("keydown", (event) => {
+    //         if (event.target.nodeName !== 'INPUT') {
+    //             this.move(event);
+    //         };
+    //     });
+    //     document.addEventListener("keyup", (event) => {
+    //         this.shift(event)
+    //     });
+    // }
+
+
+
+    
     componentDidMount() {
         this.mountLevel();
-        document.addEventListener("keydown", (event) => { 
-            if (event.target.nodeName == 'INPUT') {
-                this.passwordHandler(event);
-                return;
-            }
-            this.move(event)
-        });
+        // document.addEventListener("keydown", (event) => { 
+        //     if (event.target.nodeName !== 'INPUT') {
+        //     this.move(event);
+        //     };
+        // });
         document.addEventListener("keyup", (event) => {
             this.shift(event)
         });
     }
 
+    //https://www.robinwieruch.de/react-warning-cant-call-setstate-on-an-unmounted-component
+
+
+
+    // componentWillUnmount() {
+    //     document.removeEventListener("keydown", (event) => {
+    //         if (event.target.nodeName !== 'INPUT') {
+    //             this.move(event);
+    //         };
+    //     });
+    //     document.removeEventListener("keyup", (event) => {
+    //         this.shift(event)
+    //     });
+    // }
+
     passwordHandler(event) {
+        console.log(event.key)
+        // console.log(event.target.value)
         if (event.key === 'Enter') {
             if (this.state.lastPasswordKey === 'Enter') {
                 this.move(event);
@@ -171,6 +201,7 @@ class App extends Component {
 /* //////////////////////  MOVE  /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////*/
     move(event) {
+        console.log('hello', event.key)
         event.preventDefault();
         if (this.state.pswdScreen) {
             if (this.state.start) {
@@ -747,13 +778,16 @@ class App extends Component {
 
     render() {
         return (
-            <div className="viewPort">
+            <div className="viewPort" >
+                {this.state.pswdScreen ? null : <Arrows move={this.move.bind(this)}/>}
                 <div id="quadGameBoard">
                     {this.state.start ? <Popup currentlvl={this.state.level + 1} level={levels[levelArray[this.state.level]]} /> : null}
-                    {this.state.pswdScreen ? <Password /> : null}
+                    {this.state.pswdScreen ? <Password passwordHandler={this.passwordHandler.bind(this)} 
+                        move={this.move.bind(this)}/> : null}
                     {this.state.boardView.map((row, i) => {
                         return (
                             <Row 
+                                
                                 row={row}
                                 rowIndex={i}
                                 key={i}
@@ -761,6 +795,7 @@ class App extends Component {
                         )
                     })}
                 </div>
+                
                 <NavLink to='/'>
                     <button className="homebutton">Home</button>
                 </NavLink>
@@ -795,6 +830,26 @@ class App extends Component {
         )
     }
 
+}
+
+const Arrows = (props) => {
+    React.useEffect(() => {
+        window.addEventListener('keydown', () => {
+            event.preventDefault();
+            props.move(event);
+        })
+
+        return () =>
+            window.removeEventListener('keydown', () => {
+                event.preventDefault();
+                props.move(event);
+            })
+    }, []);
+
+    return (
+        <>
+        </>
+    )
 }
 
 export default App;

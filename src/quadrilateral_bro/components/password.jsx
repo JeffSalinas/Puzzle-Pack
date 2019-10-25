@@ -12,7 +12,7 @@ const Password = (props) => {
           </div>
           <div id="text">
             Password:
-            <input></input>
+            <input onKeyDown={props.passwordHandler}></input>
           </div>
           <p className="pswInstruction">{'Password ? jumpToLvl() : '}<br></br>
           {'*Press Any Key To Begin*'}
