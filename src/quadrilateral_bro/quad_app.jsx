@@ -16,49 +16,55 @@ const App = (props) => {
     const [viewLocation, setViewLocation] = useState({ row: 0, col: 0 });
     const [brocation, setBrocation] = useState({ row: 0, col: 0 });
     const [doorLocation, setDoorLocation] = useState({ row: 0, col: 0 });
-    const [start, setStart] = useState(true);
     const [pswdScreen, setPswdScreen] = useState(true);
+    const [password, setPassword] = useState('');
     const [lastPasswordKey, setLastPasswordKey] = useState(''); 
-
+    const [attempt, setAttempt] = useState(0);
+    const [start, setStart] = useState(true);
+    
     useEffect (() => {
-        document.addEventListener("keyup", (event) => {
-            shift(event)
-        });
-
-        return document.removeEventListener("keyup", (event) => {
-            shift(event)
-        });
+        if (!pswdScreen) {
+            console.log('set')
+            window.addEventListener("keydown", (event) => {
+                event.preventDefault();
+                console.log('working')
+                    shift(event);
+                    move(event);
+            });
+    
+            return window.removeEventListener("keydown", (event) => {
+                event.preventDefault();
+                    shift(event);
+                    move(event);
+            });
+        } else if (attempt >=2){
+            setPswdScreen(false);
+        }
     });
 
     useEffect(() => {
         mountLevel();
     }, []);
 
-    const passwordHandler = (event) => {
-        if (event.key === 'Enter') {
-            if (lastPasswordKey === 'Enter') {
-                // move(event);
+    const submitPassword = (e) => {
+        e.preventDefault();
+
+        for (let lvl = 0; lvl < levelArray.length; lvl++) {
+            if (levels[levelArray[lvl]].password === password) {
+                setPassword('Kubernetes!');
+
+                setTimeout(() => {
+                    setLevel(lvl);
+                    setPswdScreen(false);
+                    mountLevel()
+                }, 500)
+                return;
             }
-
-            for (let lvl = 0; lvl < levelArray.length; lvl++) {
-                if (levels[levelArray[lvl]].password === event.target.value) {
-                    event.target.value = 'Kubernetes!'
-
-                    setTimeout(() => {
-                        setLevel(lvl);
-                        setPswdScreen(false);
-                        mountLevel()
-                    }, 500)
-                    return;
-                }
-            }
-
-            event.target.value = ''
-            setLastPasswordKey('Enter');
-        } else {
-            return;
         }
-    };
+
+        setAttempt(attempt + 1);
+        setPassword('');
+    }
 
     const shift = (event) => {
         if (event.shiftKey === false && shiftDown === true) {
@@ -102,15 +108,14 @@ const App = (props) => {
         findBro();
     }
 
-    // syncView() {
-    //     let newView = [];
-    //     for (let i = this.state.boardLocation.row; i < this.state.boardLocation.row + 12; i++) {
-    //         newView.push(this.state.fullBoard[i].slice(this.state.boardLocation.col, this.state.boardLocation.col + 18));
-    //     }
-    //     this.setState(() => {
-    //         return { boardView: newView };
-    //     })
-    // }
+    const syncView = () => {
+        let newView = [];
+        for (let i = boardLocation.row; i < boardLocation.row + 12; i++) {
+            newView.push(fullBoard[i].slice(boardLocation.col, boardLocation.col + 18));
+        }
+
+        setBoardView(newView);
+    };
 
     const findBro = () => {
         for (let row = 0; row < fullBoard.length; row++) {
@@ -137,51 +142,50 @@ const App = (props) => {
         }
     }
 
-    // broDirection(e, boolean) {
-    //     this.setState({broRight: boolean}, () => {
-    //         let newBoard = this.state.fullBoard.slice();
-    //         boolean ? newBoard[this.state.brocation.row][this.state.brocation.col] = './images/dudeRight.png' : 
-    //             newBoard[this.state.brocation.row][this.state.brocation.col] = './images/dudeLeft.png';
-            
-    //         this.setState({ fullBoard: newBoard}, () => {
-    //             this.syncView();
-    //         });
-    //     });
-    // }
+    const broDirection = (e, boolean) => {
+        setBroRight(boolean);
+
+        let newBoard = fullBoard.slice();
+        boolean ? newBoard[brocation.row][brocation.col] = './images/dudeRight.png' : 
+            newBoard[brocation.row][brocation.col] = './images/dudeLeft.png';
+        
+        setFullBoard(newBoard);
+        syncView();
+    }
 
 /* //////////////////////  MOVE  /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////*/
-    // move(event) {
-    //     console.log('hello', event.key)
-    //     event.preventDefault();
-    //     if (this.state.pswdScreen) {
-    //         if (this.state.start) {
-    //             this.setState(() => { return { pswdScreen: false }; });
-    //         }
-    //         return;
-    //     }
+    const move = (event) => {
+        // console.log('hello', event.key)
+        if (pswdScreen) {
+            if (start) {
+                setPswdScreen(false);
+            }
+            return;
+        }
 
-    //     if (this.state.start) {
-    //         if (this.state.start) {
-    //             this.setState(() => { return { start: false }; });
-    //         }
-    //         return;
-    //     }
+        if (start) {
+            if (start) {
+                setStart(false);
+            }
+            return;
+        }
 
-    //     let newBoard = this.state.fullBoard.slice();
+        let newBoard = fullBoard.slice();
 
-    //     if (event.key === 'r') {
-    //         this.mountLevel();
-    //         return;
-    //     }
+        if (event.key === 'r') {
+            mountLevel();
+            return;
+        }
 
-    //     if (event.shiftKey === true) {
-    //         this.moveView(event);
-    //         return;
-    //     } else if (event.key === 'ArrowLeft') {
-    //         if (this.state.broRight === true) {
-    //             this.broDirection(null, false)
-    //         }
+        if (event.shiftKey === true) {
+            moveView(event);
+            return;
+        } 
+        // else if (event.key === 'ArrowLeft') {
+        //     if (broRight === true) {
+        //         broDirection(null, false)
+        //     }
 
     //         //if left is empty or door, and block on head, and higher than 2nd to last row.
     //         if ((newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/empty.png' ||
@@ -616,7 +620,7 @@ const App = (props) => {
     //     } else {
     //         return;
     //     }
-    // }
+    }
 
 /* ///////////////////////  VIEW   ///////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////*/
@@ -729,9 +733,8 @@ const App = (props) => {
     return (
         <div className="viewPort" >
             <div id="quadGameBoard">
-                {start ? <Popup currentlvl={level + 1} level={levels[levelArray[level]]} /> : null}
-                {pswdScreen ? <Password passwordHandler={passwordHandler.bind(this)} /> : null}
-                    {/* move={move.bind(this)}/> : null} */}
+                {pswdScreen && <Password password={password} setPassword={(e) => setPassword(e.target.value)} submitPassword={submitPassword}/>}
+                {start && <Popup currentlvl={level + 1} level={levels[levelArray[level]]} />}
                 {boardView.map((row, i) => {
                     return (
                         <Row 

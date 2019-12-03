@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const Password = (props) => {
+const Password = ({password, setPassword, submitPassword}) => {
 
   return (
     ReactDOM.createPortal(
@@ -12,7 +12,9 @@ const Password = (props) => {
           </div>
           <div id="text">
             Password:
-            <input onKeyDown={props.passwordHandler}></input>
+            <form onSubmit={submitPassword}>
+              <input value={password} onChange={setPassword}></input>
+            </form>
           </div>
           <p className="pswInstruction">{'Password ? jumpToLvl() : '}<br></br>
           {'*Press Any Key To Begin*'}
