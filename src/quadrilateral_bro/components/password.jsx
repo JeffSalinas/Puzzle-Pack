@@ -13,7 +13,7 @@ const Password = ({password, setPassword, submitPassword}) => {
           <div id="text">
             Password:
             <form onSubmit={submitPassword}>
-              <input value={password} onChange={setPassword}></input>
+              <input id="password_input" value={password} onChange={setPassword}></input>
             </form>
           </div>
           <p className="pswInstruction">{'Password ? jumpToLvl() : '}<br></br>

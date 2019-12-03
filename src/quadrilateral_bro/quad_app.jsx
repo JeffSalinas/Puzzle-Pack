@@ -6,7 +6,7 @@ import Password from './components/password.jsx';
 import levels from './components/Levels.js';
 const levelArray = Object.keys(levels);
 
-const App = (props) => {
+const App = () => {
     const [level, setLevel] = useState(0);
     const [fullBoard, setFullBoard] = useState([]);
     const [boardView, setBoardView] = useState([]);
@@ -18,33 +18,85 @@ const App = (props) => {
     const [doorLocation, setDoorLocation] = useState({ row: 0, col: 0 });
     const [pswdScreen, setPswdScreen] = useState(true);
     const [password, setPassword] = useState('');
-    const [lastPasswordKey, setLastPasswordKey] = useState(''); 
     const [attempt, setAttempt] = useState(0);
     const [start, setStart] = useState(true);
+    const [keyTracker, setKeyTracker] = useState(true);
+    const [test, setTest] = useState(false);
     
+    // useEffect (() => {
+    //     if (!pswdScreen) {
+    //         window.addEventListener("keydown", (event) => {
+    //             event.preventDefault();
+    //                 shift(event);
+    //                 move(event);
+    //         });
+    
+    //         return window.removeEventListener("keydown", (event) => {
+    //             event.preventDefault();
+    //                 shift(event);
+    //                 move(event);
+    //         });
+    //     } else if (attempt >=2){
+    //         setPswdScreen(false);
+    //     }
+    // });
+
     useEffect (() => {
-        if (!pswdScreen) {
-            console.log('set')
-            window.addEventListener("keydown", (event) => {
-                event.preventDefault();
-                console.log('working')
-                    shift(event);
-                    move(event);
-            });
-    
-            return window.removeEventListener("keydown", (event) => {
-                event.preventDefault();
-                    shift(event);
-                    move(event);
-            });
-        } else if (attempt >=2){
+        console.log(keyTracker)
+        if (keyTracker) {
+            window.addEventListener("keydown", move);
+        
+            return () => {
+                window.removeEventListener("keydown", move);
+
+            }
+        } else if (attempt >= 2) {
             setPswdScreen(false);
+            setKeyTracker(true);
         }
     });
 
+    useEffect (() => {
+        let testing = document.getElementById('password_input');
+        testing.addEventListener('click', changeTracker);
+
+        return () => {
+            testing.removeEventListener('click', changeTracker);
+        }
+    }, [])
+
+    const changeTracker = (event) => {
+        event.preventDefault();
+
+        setKeyTracker(false);
+    }
+    
+
+
+    // useEffect(() => {
+    //     window.addEventListener("click", (e) => {
+    //         e.preventDefault();
+    //         console.log('click')
+    //         setKeyTracker(false);
+    //         document.removeEventListener("keydown", (event) => {
+    //             event.preventDefault();
+    //             console.log('button')
+    //             shift(event);
+    //             move(event);
+    //         });
+    //     });
+
+    //     return window.removeEventListener("click", (e) => {
+    //         e.preventDefault();
+    //         setKeyTracker(false);
+    //     });
+    // });
+
+
+
     useEffect(() => {
         mountLevel();
-    }, []);
+    }, [level]);
 
     const submitPassword = (e) => {
         e.preventDefault();
@@ -52,11 +104,10 @@ const App = (props) => {
         for (let lvl = 0; lvl < levelArray.length; lvl++) {
             if (levels[levelArray[lvl]].password === password) {
                 setPassword('Kubernetes!');
-
+                setKeyTracker(true);
                 setTimeout(() => {
                     setLevel(lvl);
                     setPswdScreen(false);
-                    mountLevel()
                 }, 500)
                 return;
             }
@@ -101,6 +152,7 @@ const App = (props) => {
             row: newFullBoard.length -12,
             col: newFullBoard[newFullBoard.length - 12].length - 18
         }
+
         setBoardLocation(location);
         setFullBoard(newFullBoard);
         setBoardView(newBoard);
@@ -156,7 +208,9 @@ const App = (props) => {
 /* //////////////////////  MOVE  /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////*/
     const move = (event) => {
-        // console.log('hello', event.key)
+        event.preventDefault();
+        let temp = !test
+        setTest(temp)
         if (pswdScreen) {
             if (start) {
                 setPswdScreen(false);
@@ -182,6 +236,8 @@ const App = (props) => {
             moveView(event);
             return;
         } 
+
+        
         // else if (event.key === 'ArrowLeft') {
         //     if (broRight === true) {
         //         broDirection(null, false)
@@ -750,6 +806,7 @@ const App = (props) => {
             <NavLink to='/'>
                 <button className="homebutton">Home</button>
             </NavLink>
+            <button onClick={() => setKeyTracker(false)}>stop</button>
             <p className="instructTitles">Objective:</p>
             <ul>
                 <li>
