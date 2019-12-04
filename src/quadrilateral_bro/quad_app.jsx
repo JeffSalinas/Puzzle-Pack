@@ -21,34 +21,13 @@ const App = () => {
     const [attempt, setAttempt] = useState(0);
     const [start, setStart] = useState(true);
     const [keyTracker, setKeyTracker] = useState(true);
-    const [test, setTest] = useState(false);
     
-    // useEffect (() => {
-    //     if (!pswdScreen) {
-    //         window.addEventListener("keydown", (event) => {
-    //             event.preventDefault();
-    //                 shift(event);
-    //                 move(event);
-    //         });
-    
-    //         return window.removeEventListener("keydown", (event) => {
-    //             event.preventDefault();
-    //                 shift(event);
-    //                 move(event);
-    //         });
-    //     } else if (attempt >=2){
-    //         setPswdScreen(false);
-    //     }
-    // });
-
     useEffect (() => {
-        console.log(keyTracker)
         if (keyTracker) {
-            window.addEventListener("keydown", move);
+            document.addEventListener("keydown", move);
         
             return () => {
-                window.removeEventListener("keydown", move);
-
+                document.removeEventListener("keydown", move);
             }
         } else if (attempt >= 2) {
             setPswdScreen(false);
@@ -57,48 +36,44 @@ const App = () => {
     });
 
     useEffect (() => {
-        let testing = document.getElementById('password_input');
-        testing.addEventListener('click', changeTracker);
+        let inputField = document.getElementById('password_input');
+        inputField.addEventListener('click', changeTracker);
 
         return () => {
-            testing.removeEventListener('click', changeTracker);
+            inputField.removeEventListener('click', changeTracker);
         }
-    }, [])
+    }, []);
 
-    const changeTracker = (event) => {
+    useEffect(() => {
+        document.addEventListener("keyup", shift);
+
+        return () => {
+            document.removeEventListener("keyup", shift);
+        }
+    });
+
+    function changeTracker(event) {
         event.preventDefault();
 
         setKeyTracker(false);
     }
-    
-
-
-    // useEffect(() => {
-    //     window.addEventListener("click", (e) => {
-    //         e.preventDefault();
-    //         console.log('click')
-    //         setKeyTracker(false);
-    //         document.removeEventListener("keydown", (event) => {
-    //             event.preventDefault();
-    //             console.log('button')
-    //             shift(event);
-    //             move(event);
-    //         });
-    //     });
-
-    //     return window.removeEventListener("click", (e) => {
-    //         e.preventDefault();
-    //         setKeyTracker(false);
-    //     });
-    // });
-
-
 
     useEffect(() => {
         mountLevel();
     }, [level]);
 
-    const submitPassword = (e) => {
+    useEffect(() => {
+        findBro();
+    }, [start])
+
+    useEffect(() => {
+        if (!start) {
+            checkWin();
+            syncView();
+        }
+    }, [brocation, fullBoard]);
+
+    function submitPassword(e) {
         e.preventDefault();
 
         for (let lvl = 0; lvl < levelArray.length; lvl++) {
@@ -117,7 +92,7 @@ const App = () => {
         setPassword('');
     }
 
-    const shift = (event) => {
+    function shift(event) {
         if (event.shiftKey === false && shiftDown === true) {
             let newView = [];
 
@@ -128,7 +103,7 @@ const App = () => {
             setShiftDown(false);
             setBoardView(newView);
         }
-    };
+    }
     
     const mountLevel = () => {
         let newFullBoard = (() => {
@@ -157,19 +132,18 @@ const App = () => {
         setFullBoard(newFullBoard);
         setBoardView(newBoard);
         setStart(true);
-        findBro();
     }
 
-    const syncView = () => {
+    function syncView () {
         let newView = [];
         for (let i = boardLocation.row; i < boardLocation.row + 12; i++) {
             newView.push(fullBoard[i].slice(boardLocation.col, boardLocation.col + 18));
         }
 
         setBoardView(newView);
-    };
+    }
 
-    const findBro = () => {
+    function findBro() {
         for (let row = 0; row < fullBoard.length; row++) {
             for (let col = 0; col < fullBoard[row].length; col++) {
                 if (fullBoard[row][col] === './images/dudeRight.png' || fullBoard[row][col] === './images/dudeLeft.png'){
@@ -194,7 +168,7 @@ const App = () => {
         }
     }
 
-    const broDirection = (e, boolean) => {
+    const broDirection = (boolean) => {
         setBroRight(boolean);
 
         let newBoard = fullBoard.slice();
@@ -202,15 +176,14 @@ const App = () => {
             newBoard[brocation.row][brocation.col] = './images/dudeLeft.png';
         
         setFullBoard(newBoard);
-        syncView();
     }
 
 /* //////////////////////  MOVE  /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////*/
     const move = (event) => {
         event.preventDefault();
-        let temp = !test
-        setTest(temp)
+        let newBoard = fullBoard.slice();
+
         if (pswdScreen) {
             if (start) {
                 setPswdScreen(false);
@@ -219,13 +192,9 @@ const App = () => {
         }
 
         if (start) {
-            if (start) {
-                setStart(false);
-            }
+            setStart(false);
             return;
         }
-
-        let newBoard = fullBoard.slice();
 
         if (event.key === 'r') {
             mountLevel();
@@ -235,556 +204,533 @@ const App = () => {
         if (event.shiftKey === true) {
             moveView(event);
             return;
-        } 
+        } else if (event.key === 'ArrowLeft') {
+            if (broRight) {
+                broDirection(false)
+            }
 
-        
-        // else if (event.key === 'ArrowLeft') {
-        //     if (broRight === true) {
-        //         broDirection(null, false)
-        //     }
-
-    //         //if left is empty or door, and block on head, and higher than 2nd to last row.
-    //         if ((newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/empty.png' ||
-    //             newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/door.png') &&
-    //             newBoard[this.state.brocation.row - 1][this.state.brocation.col] === './images/block.png') {
+            //if left is empty or door, and block on head, and higher than 2nd to last row.
+            if ((newBoard[brocation.row][brocation.col - 1] === './images/empty.png' ||
+                newBoard[brocation.row][brocation.col - 1] === './images/door.png') &&
+                newBoard[brocation.row - 1][brocation.col] === './images/block.png') {
                     
-    //             // if left/down space empty, fall down
-    //             if (newBoard[this.state.brocation.row + 1][this.state.brocation.col - 1] === './images/empty.png') {
-    //                 let newBrocation = {
-    //                     col: this.state.brocation.col - 1
-    //                 }
+                // if left/down space empty, fall down
+                if (newBoard[brocation.row + 1][brocation.col - 1] === './images/empty.png') {
+                    let newBrocation = {
+                        col: brocation.col - 1
+                    }
                     
-    //                 for (let i = this.state.brocation.row + 2; i < newBoard.length; i++) {
-    //                     if (newBoard[i][this.state.brocation.col - 1] === './images/block.png' ||
-    //                         newBoard[i][this.state.brocation.col - 1] === './images/brick.png') {
-    //                         newBoard[i - 1][this.state.brocation.col - 1] = './images/dudeLeft.png';
-    //                         newBrocation.row = i - 1;
-    //                         break;
-    //                     }
-    //                 }
-    //                 newBoard[newBrocation.row - 1][newBrocation.col] = './images/block.png';
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png';
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png';
+                    for (let i = brocation.row + 2; i < newBoard.length; i++) {
+                        if (newBoard[i][brocation.col - 1] === './images/block.png' ||
+                            newBoard[i][brocation.col - 1] === './images/brick.png') {
+                            newBoard[i - 1][brocation.col - 1] = './images/dudeLeft.png';
+                            newBrocation.row = i - 1;
+                            break;
+                        }
+                    }
+                    newBoard[newBrocation.row - 1][newBrocation.col] = './images/block.png';
+                    newBoard[brocation.row - 1][brocation.col] = './images/empty.png';
+                    newBoard[brocation.row][brocation.col] = './images/empty.png';
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col - 1 <= this.state.boardLocation.col + 8 && 
-    //                     this.state.boardLocation.col !== 0) {
-    //                     newBoardLocation.col--;
-    //                 }
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    }
+                    if (brocation.col - 1 <= boardLocation.col + 8 && 
+                        boardLocation.col !== 0) {
+                        newBoardLocation.col--;
+                    }
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             //moves but doesn't fall
-    //             } else {
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col - 1] = './images/dudeLeft.png'
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col - 1] = './images/block.png'
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png'
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png'
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation);
 
-    //                 let newBrocation = {
-    //                     row: this.state.brocation.row,
-    //                     col: this.state.brocation.col - 1
-    //                 }
+                //moves but doesn't fall
+                } else {
+                    newBoard[brocation.row][brocation.col - 1] = './images/dudeLeft.png'
+                    newBoard[brocation.row - 1][brocation.col - 1] = './images/block.png'
+                    newBoard[brocation.row][brocation.col] = './images/empty.png'
+                    newBoard[brocation.row - 1][brocation.col] = './images/empty.png'
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col - 1 <= this.state.boardLocation.col + 8 &&
-    //                     this.state.boardLocation.col !== 0) {
-    //                     newBoardLocation.col--;
-    //                 }
+                    let newBrocation = {
+                        row: brocation.row,
+                        col: brocation.col - 1
+                    }
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             }
-    //           //if left space is empty or a door, and no block is above. 
-    //         } else if (newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/empty.png' ||
-    //             newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/door.png') {
-    //                 // if left/down space empty, fall down
-    //             if (newBoard[this.state.brocation.row + 1][this.state.brocation.col - 1] === './images/empty.png') {
-    //                 let newBrocation = {
-    //                     col: this.state.brocation.col - 1
-    //                 }
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    }
+                    if (brocation.col - 1 <= boardLocation.col + 8 &&
+                        boardLocation.col !== 0) {
+                        newBoardLocation.col--;
+                    }
+
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation);
+                }
+                //if left space is empty or a door, and no block is above. 
+            } else if (newBoard[brocation.row][brocation.col - 1] === './images/empty.png' ||
+                newBoard[brocation.row][brocation.col - 1] === './images/door.png') {
+
+                    // if left/down space empty, fall down
+                if (newBoard[brocation.row + 1][brocation.col - 1] === './images/empty.png') {
+                    let newBrocation = {
+                        col: brocation.col - 1
+                    }
                     
-    //                 for (let i = this.state.brocation.row + 2; i < newBoard.length; i++) {
-    //                     if (newBoard[i][this.state.brocation.col - 1] === './images/block.png' ||
-    //                         newBoard[i][this.state.brocation.col - 1] === './images/brick.png') {
-    //                         newBoard[i - 1][this.state.brocation.col - 1] = './images/dudeLeft.png';
-    //                         newBrocation.row = i - 1;
-    //                         break;
-    //                     }
-    //                 }
+                    for (let i = brocation.row + 2; i < newBoard.length; i++) {
+                        if (newBoard[i][brocation.col - 1] === './images/block.png' ||
+                            newBoard[i][brocation.col - 1] === './images/brick.png') {
+                            newBoard[i - 1][brocation.col - 1] = './images/dudeLeft.png';
+                            newBrocation.row = i - 1;
+                            break;
+                        }
+                    }
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col - 1 <= this.state.boardLocation.col + 8 &&
-    //                     this.state.boardLocation.col !== 0) {
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    }
+                    if (brocation.col - 1 <= boardLocation.col + 8 &&
+                        boardLocation.col !== 0) {
 
-    //                     newBoardLocation.col--;
-    //                 }
+                        newBoardLocation.col--;
+                    }
 
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png';
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             } else {
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col - 1] = './images/dudeLeft.png'
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png'
+                    newBoard[brocation.row][brocation.col] = './images/empty.png';
 
-    //                 let newBrocation = {
-    //                     row: this.state.brocation.row,
-    //                     col: this.state.brocation.col - 1
-    //                 }
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation);
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col - 1 <= this.state.boardLocation.col + 8 &&
-    //                     this.state.boardLocation.col !== 0) {
-    //                     newBoardLocation.col--;
-    //                 }
+                } else {
+                    newBoard[brocation.row][brocation.col - 1] = './images/dudeLeft.png'
+                    newBoard[brocation.row][brocation.col] = './images/empty.png'
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             }
-    //         }
-    //     } else if (event.key === 'ArrowRight') {
-    //         if (this.state.broRight === false) {
-    //             this.broDirection(null, true)
-    //         }
+                    let newBrocation = {
+                        row: brocation.row,
+                        col: brocation.col - 1
+                    }
 
-    //             //if right empty, or door and carrying block, move both right
-    //         if ((newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/empty.png' || 
-    //             newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/door.png') && 
-    //             newBoard[this.state.brocation.row - 1][this.state.brocation.col] === './images/block.png') {
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    }
+                    if (brocation.col - 1 <= boardLocation.col + 8 &&
+                        boardLocation.col !== 0) {
+                        newBoardLocation.col--;
+                    }
+
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation);
+
+                    }
+                }
+            } else if (event.key === 'ArrowRight') {
+            if (!broRight) {
+                broDirection(true);
+            }
+
+                //if right empty, or door and carrying block, move both right
+            if ((newBoard[brocation.row][brocation.col + 1] === './images/empty.png' || 
+                newBoard[brocation.row][brocation.col + 1] === './images/door.png') && 
+                newBoard[brocation.row - 1][brocation.col] === './images/block.png') {
                 
     
-    //             // if left/down space empty, fall down
-    //             if (newBoard[this.state.brocation.row + 1][this.state.brocation.col + 1] === './images/empty.png') {
-    //                 let newBrocation = {
-    //                     col: this.state.brocation.col + 1
-    //                 }
+                // if left/down space empty, fall down
+                if (newBoard[brocation.row + 1][brocation.col + 1] === './images/empty.png') {
+                    let newBrocation = {
+                        col: brocation.col + 1
+                    };
 
-    //                 for (let i = this.state.brocation.row + 2; i < newBoard.length; i++) {
-    //                     if (newBoard[i][this.state.brocation.col + 1] === './images/brick.png' || 
-    //                         newBoard[i][this.state.brocation.col + 1] === './images/block.png') {
-    //                         newBoard[i - 1][this.state.brocation.col + 1] = './images/dudeRight.png';
-    //                         newBrocation.row = i - 1;
-    //                         break;
-    //                     }
-    //                 }
-    //                 newBoard[newBrocation.row - 1][newBrocation.col] = './images/block.png';
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png';
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png';
+                    for (let i = brocation.row + 2; i < newBoard.length; i++) {
+                        if (newBoard[i][brocation.col + 1] === './images/brick.png' || 
+                            newBoard[i][brocation.col + 1] === './images/block.png') {
+                            newBoard[i - 1][brocation.col + 1] = './images/dudeRight.png';
+                            newBrocation.row = i - 1;
+                            break;
+                        }
+                    }
+                    newBoard[newBrocation.row - 1][newBrocation.col] = './images/block.png';
+                    newBoard[brocation.row - 1][brocation.col] = './images/empty.png';
+                    newBoard[brocation.row][brocation.col] = './images/empty.png';
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col + 1 >= this.state.boardLocation.col + 9 &&
-    //                     this.state.boardLocation.col + 17 !== this.state.fullBoard[0].length - 1) {
-    //                     newBoardLocation.col++;
-    //                 }
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    };
+                    if (brocation.col + 1 >= boardLocation.col + 9 &&
+                        boardLocation.col + 17 !== fullBoard[0].length - 1) {
+                        newBoardLocation.col++;
+                    }
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //                 //moves but doesn't fall
-    //             } else {
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col + 1] = './images/dudeRight.png';
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col + 1] = './images/block.png';
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png';
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png';
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation)
 
-    //                 let newBrocation = {
-    //                     row: this.state.brocation.row,
-    //                     col: this.state.brocation.col + 1
-    //                 }
+                    //moves but doesn't fall
+                } else {
+                    newBoard[brocation.row][brocation.col + 1] = './images/dudeRight.png';
+                    newBoard[brocation.row - 1][brocation.col + 1] = './images/block.png';
+                    newBoard[brocation.row][brocation.col] = './images/empty.png';
+                    newBoard[brocation.row - 1][brocation.col] = './images/empty.png';
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col + 1 >= this.state.boardLocation.col + 9 &&
-    //                     this.state.boardLocation.col + 17 !== this.state.fullBoard[0].length - 1) {
-    //                     newBoardLocation.col++;
-    //                 }
+                    let newBrocation = {
+                        row: brocation.row,
+                        col: brocation.col + 1
+                    };
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             }
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    };
+                    if (brocation.col + 1 >= boardLocation.col + 9 &&
+                        boardLocation.col + 17 !== fullBoard[0].length - 1) {
+                        newBoardLocation.col++;
+                    }
+
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation)
+                }
       
-    //             //if right empty or door, move bro
-    //         } else if (newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/empty.png' ||
-    //             newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/door.png') {
+                //if right empty or door, move bro
+            } else if (newBoard[brocation.row][brocation.col + 1] === './images/empty.png' ||
+                newBoard[brocation.row][brocation.col + 1] === './images/door.png') {
                 
-    //             // if row/down space empty, fall down
-    //             if (newBoard[this.state.brocation.row + 1][this.state.brocation.col + 1] === './images/empty.png') {
-    //                 let newBrocation = {
-    //                     col: this.state.brocation.col + 1
-    //                 }
+                // if row/down space empty, fall down
+                if (newBoard[brocation.row + 1][brocation.col + 1] === './images/empty.png') {
+                    let newBrocation = {
+                        col: brocation.col + 1
+                    };
 
-    //                 for (let i = this.state.brocation.row + 2; i < newBoard.length; i++) {
-    //                     if (newBoard[i][this.state.brocation.col + 1] === './images/brick.png' ||
-    //                         newBoard[i][this.state.brocation.col + 1] === './images/block.png') {
-    //                         newBoard[i - 1][this.state.brocation.col + 1] = './images/dudeRight.png';
-    //                         newBrocation.row = i - 1;
-    //                         break;
-    //                     }
-    //                 }
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png';
+                    for (let i = brocation.row + 2; i < newBoard.length; i++) {
+                        if (newBoard[i][brocation.col + 1] === './images/brick.png' ||
+                            newBoard[i][brocation.col + 1] === './images/block.png') {
+                            newBoard[i - 1][brocation.col + 1] = './images/dudeRight.png';
+                            newBrocation.row = i - 1;
+                            break;
+                        }
+                    }
+                    newBoard[brocation.row][brocation.col] = './images/empty.png';
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col + 1 >= this.state.boardLocation.col + 9 &&
-    //                     this.state.boardLocation.col + 17 !== this.state.fullBoard[0].length - 1) {
-    //                     newBoardLocation.col++;
-    //                 }
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    };
+                    if (brocation.col + 1 >= boardLocation.col + 9 &&
+                        boardLocation.col + 17 !== fullBoard[0].length - 1) {
+                        newBoardLocation.col++;
+                    }
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             } else {
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col + 1] = './images/dudeRight.png'
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png'
-    //                 let newBrocation = {
-    //                     row: this.state.brocation.row,
-    //                     col: this.state.brocation.col + 1
-    //                 }
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation)
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col + 1 >= this.state.boardLocation.col + 9 &&
-    //                     this.state.boardLocation.col + 17 !== this.state.fullBoard[0].length - 1) {
-    //                     newBoardLocation.col++;
-    //                 }
+                } else {
+                    newBoard[brocation.row][brocation.col + 1] = './images/dudeRight.png';
+                    newBoard[brocation.row][brocation.col] = './images/empty.png';
+                    let newBrocation = {
+                        row: brocation.row,
+                        col: brocation.col + 1
+                    };
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             }
-    //         } 
-    //         // console.log('right');
-    //     } else if (event.key === 'ArrowUp') {
-    //         // console.log('up');
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    };
+                    if (brocation.col + 1 >= boardLocation.col + 9 &&
+                        boardLocation.col + 17 !== fullBoard[0].length - 1) {
+                        newBoardLocation.col++;
+                    }
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation)
+                }
+            } 
+        } else if (event.key === 'ArrowUp') {
+            if (broRight) {
+                let rightBlock = newBoard[brocation.row][brocation.col + 1] === './images/brick.png' ||
+                    newBoard[brocation.row][brocation.col + 1] === './images/block.png';
+                let rightUpEmpty = newBoard[brocation.row - 1][brocation.col + 1] === './images/empty.png' || newBoard[brocation.row - 1][brocation.col + 1] === './images/door.png';
+                let holdingBlock = newBoard[brocation.row - 1][brocation.col] === './images/block.png';
 
-    //         if (this.state.broRight) {
-    //             let rightBlock = newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/brick.png' ||
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/block.png';
-    //             let rightUpEmpty = newBoard[this.state.brocation.row - 1][this.state.brocation.col + 1] === './images/empty.png' || newBoard[this.state.brocation.row - 1][this.state.brocation.col + 1] === './images/door.png';
-    //             let holdingBlock = newBoard[this.state.brocation.row - 1][this.state.brocation.col] === './images/block.png';
+                //if block on right, empty space above, and block above, move up
+                if (rightBlock && rightUpEmpty && holdingBlock) { 
+                    newBoard[brocation.row - 1][brocation.col + 1] = './images/dudeRight.png';
+                    newBoard[brocation.row - 2][brocation.col + 1] = './images/block.png';
+                    newBoard[brocation.row][brocation.col] = './images/empty.png'
+                    newBoard[brocation.row - 1][brocation.col] = './images/empty.png'
+                    let newBrocation = {
+                        row: brocation.row - 1,
+                        col: brocation.col + 1
+                    }
 
-    //             //if block on right, empty space above, and block above, move up
-    //             if (rightBlock && rightUpEmpty && holdingBlock) { 
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col + 1] = './images/dudeRight.png';
-    //                 newBoard[this.state.brocation.row - 2][this.state.brocation.col + 1] = './images/block.png';
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png'
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png'
-    //                 let newBrocation = {
-    //                     row: this.state.brocation.row - 1,
-    //                     col: this.state.brocation.col + 1
-    //                 }
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    }
+                    if (brocation.col + 1 >= boardLocation.col + 9 &&
+                        boardLocation.col + 17 !== fullBoard[0].length - 1) {
+                        newBoardLocation.col++;
+                    }
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col + 1 >= this.state.boardLocation.col + 9 &&
-    //                     this.state.boardLocation.col + 17 !== this.state.fullBoard[0].length - 1) {
-    //                     newBoardLocation.col++;
-    //                 }
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation)
+                //if block on right and empty space or door above, move up
+                } else if (rightBlock && rightUpEmpty) {
+                    newBoard[brocation.row - 1][brocation.col + 1] = './images/dudeRight.png';
+                    newBoard[brocation.row][brocation.col] = './images/empty.png'
+                    let newBrocation = {
+                        row: brocation.row - 1,
+                        col: brocation.col + 1
+                    }
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             //if block on right and empty space or door above, move up
-    //             } else if (rightBlock && rightUpEmpty) {
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col + 1] = './images/dudeRight.png';
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png'
-    //                 let newBrocation = {
-    //                     row: this.state.brocation.row - 1,
-    //                     col: this.state.brocation.col + 1
-    //                 }
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    }
+                    if (brocation.col + 1 >= boardLocation.col + 9 &&
+                        boardLocation.col + 17 !== fullBoard[0].length - 1) {
+                        newBoardLocation.col++;
+                    }
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col + 1 >= this.state.boardLocation.col + 9 &&
-    //                     this.state.boardLocation.col + 17 !== this.state.fullBoard[0].length - 1) {
-    //                     newBoardLocation.col++;
-    //                 }
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation)
+                }
+            } else if (!broRight) {
+                let leftBlock = newBoard[brocation.row][brocation.col - 1] === './images/brick.png' ||
+                    newBoard[brocation.row][brocation.col - 1] === './images/block.png';
+                let leftUpEmpty = newBoard[brocation.row - 1][brocation.col - 1] === './images/empty.png' || newBoard[brocation.row - 1][brocation.col - 1] === './images/door.png';
+                let holdingBlock = newBoard[brocation.row - 1][brocation.col] === './images/block.png';
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             }
-    //         } else if (!this.state.broRight) {
-    //             let leftBlock = newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/brick.png' ||
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/block.png';
-    //             let leftUpEmpty = newBoard[this.state.brocation.row - 1][this.state.brocation.col - 1] === './images/empty.png' || newBoard[this.state.brocation.row - 1][this.state.brocation.col - 1] === './images/door.png';
-    //             let holdingBlock = newBoard[this.state.brocation.row - 1][this.state.brocation.col] === './images/block.png';
+                //if block on left, empty space above, and block above, move up
+                if (leftBlock && leftUpEmpty && holdingBlock) {
+                    newBoard[brocation.row - 1][brocation.col - 1] = './images/dudeLeft.png';
+                    newBoard[brocation.row - 2][brocation.col - 1] = './images/block.png';
+                    newBoard[brocation.row][brocation.col] = './images/empty.png'
+                    newBoard[brocation.row - 1][brocation.col] = './images/empty.png'
+                    let newBrocation = {
+                        row: brocation.row - 1,
+                        col: brocation.col - 1
+                    }
 
-    //             //if block on left, empty space above, and block above, move up
-    //             if (leftBlock && leftUpEmpty && holdingBlock) {
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col - 1] = './images/dudeLeft.png';
-    //                 newBoard[this.state.brocation.row - 2][this.state.brocation.col - 1] = './images/block.png';
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png'
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png'
-    //                 let newBrocation = {
-    //                     row: this.state.brocation.row - 1,
-    //                     col: this.state.brocation.col - 1
-    //                 }
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    }
+                    if (brocation.col - 1 <= boardLocation.col + 8 &&
+                        boardLocation.col !== 0) {
+                        newBoardLocation.col--;
+                    }
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col - 1 <= this.state.boardLocation.col + 8 &&
-    //                     this.state.boardLocation.col !== 0) {
-    //                     newBoardLocation.col--;
-    //                 }
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation)
+                    //if block on left and empty space above, move up
+                } else if (leftBlock && leftUpEmpty) {
+                    newBoard[brocation.row - 1][brocation.col - 1] = './images/dudeLeft.png';
+                    newBoard[brocation.row][brocation.col] = './images/empty.png'
+                    let newBrocation = {
+                        row: brocation.row - 1,
+                        col: brocation.col - 1
+                    }
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //                 //if block on left and empty space above, move up
-    //             } else if (leftBlock && leftUpEmpty) {
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col - 1] = './images/dudeLeft.png';
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col] = './images/empty.png'
-    //                 let newBrocation = {
-    //                     row: this.state.brocation.row - 1,
-    //                     col: this.state.brocation.col - 1
-    //                 }
+                    let newBoardLocation = {
+                        row: boardLocation.row,
+                        col: boardLocation.col
+                    }
+                    if (brocation.col - 1 <= boardLocation.col + 8 &&
+                        boardLocation.col !== 0) {
+                        newBoardLocation.col--;
+                    }
 
-    //                 let newBoardLocation = {
-    //                     row: this.state.boardLocation.row,
-    //                     col: this.state.boardLocation.col
-    //                 }
-    //                 if (this.state.brocation.col - 1 <= this.state.boardLocation.col + 8 &&
-    //                     this.state.boardLocation.col !== 0) {
-    //                     newBoardLocation.col--;
-    //                 }
+                    setFullBoard(newBoard);
+                    setBrocation(newBrocation);
+                    setBoardLocation(newBoardLocation)
+                }
+            }
+        } else if (event.key === 'ArrowDown') {
+            if (broRight) {
+                //if block on right and nothing on top, pick up
+                if (newBoard[brocation.row][brocation.col + 1] === './images/block.png' &&
+                    newBoard[brocation.row - 1][brocation.col] === './images/empty.png') {
+                    newBoard[brocation.row - 1][brocation.col] = './images/block.png'
+                    newBoard[brocation.row][brocation.col + 1] = './images/empty.png'
+                    setFullBoard(newBoard);
+                    //if block on top, and nothing on right, put down
+                } else if (newBoard[brocation.row - 1][brocation.col] === './images/block.png') {
+                    //if brick, block, or door in the way, dont put down
+                    if (newBoard[brocation.row][brocation.col + 1] === './images/brick.png' ||
+                    newBoard[brocation.row][brocation.col + 1] === './images/block.png' ||
+                    newBoard[brocation.row][brocation.col + 1] === './images/door.png') {
+                        //place on ledge if space is empty
+                        if (newBoard[brocation.row - 1][brocation.col + 1] === './images/empty.png') {
+                            newBoard[brocation.row - 1][brocation.col + 1] = './images/block.png';
+                            newBoard[brocation.row - 1][brocation.col] = './images/empty.png';
+                            setFullBoard(newBoard);
+                        }
+                        return;
+                    }
+                    let blockLocation = {
+                        col: brocation.col + 1
+                    }
 
-    //                 this.setState({ fullBoard: newBoard, brocation: newBrocation, boardLocation: newBoardLocation }, () => {
-    //                     this.checkWin();
-    //                     this.syncView();
-    //                 });
-    //             }
-    //         }
-    //     } else if (event.key === 'ArrowDown') {
-    //         // console.log('down');
-    //         if (this.state.broRight) {
-    //             //if block on right and nothing on top, pick up
-    //             if (newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/block.png' &&
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col] === './images/empty.png') {
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/block.png'
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col + 1] = './images/empty.png'
-    //                 this.setState({ fullBoard: newBoard }, () => this.syncView());
-    //                 //if block on top, and nothing on right, put down
-    //             } else if (newBoard[this.state.brocation.row - 1][this.state.brocation.col] === './images/block.png') {
-    //                 //if brick, block, or door in the way, dont put down
-    //                 if (newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/brick.png' ||
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/block.png' ||
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col + 1] === './images/door.png') {
-    //                     //place on ledge if space is empty
-    //                     if (newBoard[this.state.brocation.row - 1][this.state.brocation.col + 1] === './images/empty.png') {
-    //                         newBoard[this.state.brocation.row - 1][this.state.brocation.col + 1] = './images/block.png';
-    //                         newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png';
-    //                         this.setState({ fullBoard: newBoard }, () => this.syncView());
-    //                     }
-    //                     return;
-    //                 }
-    //                 let blockLocation = {
-    //                     col: this.state.brocation.col + 1
-    //                 }
+                    for (let i = brocation.row; i < newBoard.length; i++) {
+                        if (newBoard[i][brocation.col + 1] !== './images/empty.png') {
+                            blockLocation.row = i - 1;
+                            break;
+                        }
+                    }
+                    newBoard[brocation.row - 1][brocation.col] = './images/empty.png';
 
-    //                 for (let i = this.state.brocation.row; i < newBoard.length; i++) {
-    //                     if (newBoard[i][this.state.brocation.col + 1] !== './images/empty.png') {
-    //                         blockLocation.row = i - 1;
-    //                         break;
-    //                     }
-    //                 }
-    //                 newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png';
+                    newBoard[blockLocation.row][blockLocation.col] = './images/block.png'
 
-    //                 newBoard[blockLocation.row][blockLocation.col] = './images/block.png'
+                    setFullBoard(newBoard);
+                }
+                //if block on left and nothing on top, pick up
+            } else if (newBoard[brocation.row][brocation.col - 1] === './images/block.png' &&
+                newBoard[brocation.row - 1][brocation.col] === './images/empty.png') {
+                newBoard[brocation.row - 1][brocation.col] = './images/block.png'
+                newBoard[brocation.row][brocation.col - 1] = './images/empty.png'
+                setFullBoard(newBoard);
 
-    //                 this.setState({ fullBoard: newBoard }, () => this.syncView());
-    //             }
-    //             //if block on left and nothing on top, pick up
-    //         } else if (newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/block.png' &&
-    //             newBoard[this.state.brocation.row - 1][this.state.brocation.col] === './images/empty.png') {
-    //             newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/block.png'
-    //             newBoard[this.state.brocation.row][this.state.brocation.col - 1] = './images/empty.png'
-    //             this.setState({ fullBoard: newBoard }, () => this.syncView());
-    //             //if block on top, and nothing on left, put down
-    //         } else if (newBoard[this.state.brocation.row - 1][this.state.brocation.col] === './images/block.png') {
+                //if block on top, and nothing on left, put down
+            } else if (newBoard[brocation.row - 1][brocation.col] === './images/block.png') {
                 
-    //             if (newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/brick.png' ||
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/block.png' ||
-    //                 newBoard[this.state.brocation.row][this.state.brocation.col - 1] === './images/door.png') {
-    //                 //place on ledge if space is empty
-    //                 if (newBoard[this.state.brocation.row - 1][this.state.brocation.col - 1] === './images/empty.png') {
-    //                     newBoard[this.state.brocation.row - 1][this.state.brocation.col - 1] = './images/block.png';
-    //                     newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png';
-    //                     this.setState({ fullBoard: newBoard }, () => this.syncView());
-    //                 }
-    //                 return;
-    //             }
-    //             let blockLocation = {
-    //                 col: this.state.brocation.col - 1
-    //             }
+                if (newBoard[brocation.row][brocation.col - 1] === './images/brick.png' ||
+                    newBoard[brocation.row][brocation.col - 1] === './images/block.png' ||
+                    newBoard[brocation.row][brocation.col - 1] === './images/door.png') {
+                    //place on ledge if space is empty
+                    if (newBoard[brocation.row - 1][brocation.col - 1] === './images/empty.png') {
+                        newBoard[brocation.row - 1][brocation.col - 1] = './images/block.png';
+                        newBoard[brocation.row - 1][brocation.col] = './images/empty.png';
+                        setFullBoard(newBoard);
+                    }
+                    return;
+                }
+                let blockLocation = {
+                    col: brocation.col - 1
+                };
 
-    //             for (let i = this.state.brocation.row; i < newBoard.length; i++) {
-    //                 if (newBoard[i][this.state.brocation.col - 1] !== './images/empty.png') {
-    //                     blockLocation.row = i - 1;
-    //                     break;
-    //                 }
-    //             }
-    //             newBoard[this.state.brocation.row - 1][this.state.brocation.col] = './images/empty.png';
+                for (let i = brocation.row; i < newBoard.length; i++) {
+                    if (newBoard[i][brocation.col - 1] !== './images/empty.png') {
+                        blockLocation.row = i - 1;
+                        break;
+                    }
+                }
+                newBoard[brocation.row - 1][brocation.col] = './images/empty.png';
 
-    //             newBoard[blockLocation.row][blockLocation.col] = './images/block.png'
+                newBoard[blockLocation.row][blockLocation.col] = './images/block.png'
 
-    //             this.setState({ fullBoard: newBoard }, () => this.syncView());
-    //         }
-    //     } else {
-    //         return;
-    //     }
+                setFullBoard(newBoard);
+
+            }
+        } else {
+            return;
+        }
     }
 
 /* ///////////////////////  VIEW   ///////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////*/
 
-    // moveView(event) {
-    //     if (this.state.shiftDown === false) {
-    //         let location = {
-    //             row: this.state.boardLocation.row,
-    //             col: this.state.boardLocation.col
-    //         }
+    function moveView (event) {
+        if (!shiftDown) {
+            let location = {
+                row: boardLocation.row,
+                col: boardLocation.col
+            };
 
-    //         this.setState(() => {
-    //             return { viewLocation: location };
-    //         })
-    //     }
+            setViewLocation(location)
+        }
 
-    //     if (event.key === 'ArrowLeft') {
-    //         if (this.state.viewLocation.col === 0) {
-    //             return;
-    //         }
-    //         let location = {
-    //             row: this.state.viewLocation.row,
-    //             col: this.state.viewLocation.col - 1
-    //         }
-            
-    //         let newView = [];
+        if (event.key === 'ArrowLeft') {
+            if (viewLocation.col === 0) {
+                return;
+            }
 
-    //         for (let i = this.state.viewLocation.row; i < this.state.viewLocation.row + 12; i++) {
-    //             newView.push(this.state.fullBoard[i].slice(this.state.viewLocation.col - 1, this.state.viewLocation.col + 17));
-    //         }
+            let location = {
+                row: viewLocation.row,
+                col: viewLocation.col - 1
+            };
+            let newView = [];
 
-    //         this.setState(() => {
-    //             return { boardView: newView, viewLocation: location, shiftDown: true};
-    //         })
-    //         // console.log('view left');
-    //     } else if (event.key === 'ArrowRight') {
-    //         if (this.state.viewLocation.col + 17 === this.state.fullBoard[0].length - 1) {
-    //             return;
-    //         }
-    //         let location = {
-    //             row: this.state.viewLocation.row,
-    //             col: this.state.viewLocation.col + 1
-    //         }
+            for (let i = viewLocation.row; i < viewLocation.row + 12; i++) {
+                newView.push(fullBoard[i].slice(viewLocation.col - 1, viewLocation.col + 17));
+            }
 
-    //         let newView = [];
+            setBoardView(newView);
+            setViewLocation(location);
+            setShiftDown(true);
 
-    //         for (let i = this.state.viewLocation.row; i < this.state.viewLocation.row + 12; i++) {
-    //             newView.push(this.state.fullBoard[i].slice(this.state.viewLocation.col + 1, this.state.viewLocation.col + 19));
-    //         }
+        } else if (event.key === 'ArrowRight') {
+            if (viewLocation.col + 17 === fullBoard[0].length - 1) {
+                return;
+            }
+            let location = {
+                row: viewLocation.row,
+                col: viewLocation.col + 1
+            };
+            let newView = [];
 
-    //         this.setState(() => {
-    //             return { boardView: newView, viewLocation: location, shiftDown: true };
-    //         })
-    //         // console.log('view right');
-    //     } else if (event.key === 'ArrowUp') {
-    //         if (this.state.viewLocation.row === 0) {
-    //             return;
-    //         }
-    //         let location = {
-    //             row: this.state.viewLocation.row - 1,
-    //             col: this.state.viewLocation.col
-    //         }
+            for (let i = viewLocation.row; i < viewLocation.row + 12; i++) {
+                newView.push(fullBoard[i].slice(viewLocation.col + 1, viewLocation.col + 19));
+            }
 
-    //         let newView = [];
+            setBoardView(newView);
+            setViewLocation(location);
+            setShiftDown(true);
 
-    //         for (let i = this.state.viewLocation.row - 1; i < this.state.viewLocation.row + 11; i++) {
-    //             newView.push(this.state.fullBoard[i].slice(this.state.viewLocation.col, this.state.viewLocation.col + 18));
-    //         }
+        } 
+        else if (event.key === 'ArrowUp') {
+            if (viewLocation.row === 0) {
+                return;
+            }
+            let location = {
+                row: viewLocation.row - 1,
+                col: viewLocation.col
+            };
+            let newView = [];
 
-    //         this.setState(() => {
-    //             return { boardView: newView, viewLocation: location, shiftDown: true };
-    //         })
-    //         // console.log('view up');
-    //     } else if (event.key === 'ArrowDown') {
-    //         if (this.state.viewLocation.row + 11 === this.state.fullBoard.length - 1) {
-    //             return;
-    //         }
-    //         let location = {
-    //             row: this.state.viewLocation.row + 1,
-    //             col: this.state.viewLocation.col
-    //         }
+            for (let i = viewLocation.row - 1; i < viewLocation.row + 11; i++) {
+                newView.push(fullBoard[i].slice(viewLocation.col, viewLocation.col + 18));
+            }
 
-    //         let newView = [];
+            setBoardView(newView);
+            setViewLocation(location);
+            setShiftDown(true);
 
-    //         for (let i = this.state.viewLocation.row + 1; i < this.state.viewLocation.row + 13; i++) {
-    //             newView.push(this.state.fullBoard[i].slice(this.state.viewLocation.col, this.state.viewLocation.col + 18));
-    //         }
+        } else if (event.key === 'ArrowDown') {
+            if (viewLocation.row + 11 === fullBoard.length - 1) {
+                return;
+            }
+            let location = {
+                row: viewLocation.row + 1,
+                col: viewLocation.col
+            }
 
-    //         this.setState(() => {
-    //             return { boardView: newView, viewLocation: location, shiftDown: true };
-    //         })
-    //         // console.log('view down');
-    //     } else {
-    //         return;
-    //     }
-    // }
+            let newView = [];
 
-    // checkWin() {
-    //     if (this.state.brocation.row === this.state.doorLocation.row && 
-    //         this.state.brocation.col === this.state.doorLocation.col) {
-    //         console.log('WINNER');
-    //         let newLevelIndex = this.state.level;
-    //         newLevelIndex++;
-    //         this.setState({level: newLevelIndex}, () => {
-    //             this.mountLevel();
-    //         })
-    //     }
-    // }
+            for (let i = viewLocation.row + 1; i < viewLocation.row + 13; i++) {
+                newView.push(fullBoard[i].slice(viewLocation.col, viewLocation.col + 18));
+            }
+
+            setBoardView(newView);
+            setViewLocation(location);
+            setShiftDown(true);
+        }
+    }
+
+    function checkWin() {
+        if (brocation.row === doorLocation.row && brocation.col === doorLocation.col) {
+            setLevel(level + 1)
+        }
+    }
 
     return (
         <div className="viewPort" >
@@ -806,7 +752,6 @@ const App = () => {
             <NavLink to='/'>
                 <button className="homebutton">Home</button>
             </NavLink>
-            <button onClick={() => setKeyTracker(false)}>stop</button>
             <p className="instructTitles">Objective:</p>
             <ul>
                 <li>
@@ -836,7 +781,6 @@ const App = () => {
             </ul>
         </div>
     )
-
 }
 
 export default App;
