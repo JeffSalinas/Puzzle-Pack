@@ -1,7 +1,7 @@
 {
-  "name": "react-ing",
+  "name": "puzzle-pack",
   "version": "1.0.0",
-  "description": "donuts, cats, react, and such",
+  "description": "A full stack implementation of two TI-83 calculator games:  Block Dude and Puzzle Frenzy, renamed Quadrilateral Bro and Tricky Tricky, respectively.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
     "compile": "webpack-dev-server -d",
     "start": "nodemon server.js"
   },
-  "author": "Zubair",
+  "author": "Salinas",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -25,7 +25,6 @@
   "dependencies": {
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
-    "bootstrap": "^4.3.1",
     "express": "^4.17.1",
     "nodemon": "^1.19.1",
     "react-dom": "^16.8.6",
