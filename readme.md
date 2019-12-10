@@ -13,11 +13,11 @@ The Puzzle Pack splash page utilizes react-router, allowing users to select whic
 
 ### Quadrilateral Bro
 
-Arrow keys are used to manipulate a matrix of images to move the hi-def character from its starting position to the door. Boxes can be moved and stacked to overcome brick barriers. Once the door is reached, the game increments to the next level and reveals its password.  
+Arrow keys are used to manipulate a matrix of images to move the high-def character from its starting position to the door. Boxes can be moved and stacked to overcome brick barriers. Once the door is reached, the game increments to the next level and reveals its password.  
 
 &nbsp; &nbsp; &nbsp; &nbsp;<img src="./demo/blocklvl1.gif" width="384" height="258">
 
-To avoid making a mistake, users can use __Shift__ + __Arrow Keys__ look ahead and explore. If users become trapped, the __R__ key will reset the current level. 
+To avoid making a mistake, users can use __Shift__ + __Arrow Keys__ to look ahead and explore. If users become trapped, the __R__ key will reset the current level. 
 
 &nbsp; &nbsp; &nbsp; &nbsp;<img src="./demo/blockview.gif" width="384" height="258">
 &nbsp; &nbsp; &nbsp; &nbsp;<img src="./demo/restartblock.gif" width="384" height="258">
@@ -81,7 +81,7 @@ Puzzle Pack uses MongoDB to record high scores! MongoDB should be running on you
 
 ### Potential Improvements
 - This application is currently only desktop friendly. I would like to add buttons for mobile users and adjust the CSS to resize for various screen sizes. 
-- The "move" function is very long, with lots of repeated logic for various conditional statements. I would like to add some thoughtful helper functions or a few custom react hooks to have more concise logic.
+- The "move" function is very long and has lots of repeated logic for various conditional statements. I would like to add some thoughtful helper functions or a few custom react hooks to have more concise logic.
 
 ## Contributors
 [Jeff Salinas](https://github.com/JeffSalinas)  
