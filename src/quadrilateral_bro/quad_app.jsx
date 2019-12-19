@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { BrowserRouter as Redirect, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Row from './components/row.jsx';
 import Popup from './components/popup.jsx';
 import Password from './components/password.jsx';
@@ -7,20 +7,20 @@ import levels from './components/Levels.js';
 const levelArray = Object.keys(levels);
 
 const App = () => {
-    const [level, setLevel] = useState(0);
-    const [fullBoard, setFullBoard] = useState([]);
-    const [boardView, setBoardView] = useState([]);
-    const [broRight, setBroRight] = useState(true);
-    const [boardLocation, setBoardLocation] = useState({ row: 0, col: 0 });
-    const [shiftDown, setShiftDown] = useState(false);
-    const [viewLocation, setViewLocation] = useState({ row: 0, col: 0 });
-    const [brocation, setBrocation] = useState({ row: 0, col: 0 });
-    const [doorLocation, setDoorLocation] = useState({ row: 0, col: 0 });
-    const [pswdScreen, setPswdScreen] = useState(true);
-    const [password, setPassword] = useState('');
     const [attempt, setAttempt] = useState(0);
-    const [start, setStart] = useState(true);
+    const [boardLocation, setBoardLocation] = useState({ row: 0, col: 0 });
+    const [boardView, setBoardView] = useState([]);
+    const [brocation, setBrocation] = useState({ row: 0, col: 0 });
+    const [broRight, setBroRight] = useState(true);
+    const [doorLocation, setDoorLocation] = useState({ row: 0, col: 0 });
+    const [fullBoard, setFullBoard] = useState([]);
     const [keyTracker, setKeyTracker] = useState(true);
+    const [level, setLevel] = useState(0);
+    const [password, setPassword] = useState('');
+    const [pswdScreen, setPswdScreen] = useState(true);
+    const [shiftDown, setShiftDown] = useState(false);
+    const [start, setStart] = useState(true);
+    const [viewLocation, setViewLocation] = useState({ row: 0, col: 0 });
     
     useEffect (() => {
         if (keyTracker) {
@@ -60,18 +60,6 @@ const App = () => {
         }
     });
 
-    const changeTracker = (event) => {
-        event.preventDefault();
-
-        setKeyTracker(false);
-    }
-
-    const trackerOn = (event) => {
-        event.preventDefault();
-
-        setKeyTracker(true);
-    }
-
     useEffect(() => {
         mountLevel();
     }, [level]);
@@ -86,6 +74,18 @@ const App = () => {
             syncView();
         }
     }, [brocation, fullBoard]);
+
+    const changeTracker = (event) => {
+        event.preventDefault();
+
+        setKeyTracker(false);
+    }
+
+    const trackerOn = (event) => {
+        event.preventDefault();
+
+        setKeyTracker(true);
+    }
 
     const submitPassword = (e) => {
         e.preventDefault();
@@ -192,8 +192,8 @@ const App = () => {
         setFullBoard(newBoard);
     }
 
-/* //////////////////////  MOVE  /////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////*/
+/* //////////////////////  MOVE  ///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////*/
     const move = (event) => {
         event.preventDefault();
         let newBoard = fullBoard.slice();

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { BrowserRouter as Redirect, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import levels from './components/Levels';
 import Row from './components/row.jsx';
 import Popup from './components/popup.jsx';
@@ -24,17 +24,25 @@ class App extends Component {
             outOfMoves: false,
             booyah: true
         };
+        this.routeKeydown = this.routeKeydown.bind(this)
     }
 
     componentDidMount() {
         this.mountLevel()
-        document.addEventListener("keydown", (event) => {
-            if (event.target.nodeName == 'INPUT') {
-                this.passwordHandler(event);
-                return;
-            }
-            this.move(event)
-        });
+        document.addEventListener("keydown", this.routeKeydown);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.routeKeydown);
+    }
+
+    routeKeydown(event) {
+        if (event.target.nodeName == 'INPUT') {
+            this.passwordHandler(event);
+            return;
+        }
+        console.log('bob')
+        this.move(event)
     }
 
     passwordHandler(event) {
@@ -99,6 +107,7 @@ class App extends Component {
     }
 
     move(event) {
+        console.log('hi')
         if (this.state.pswdScreen) {
             if (this.state.start) {
                 this.setState(() => { return { pswdScreen: false}; });

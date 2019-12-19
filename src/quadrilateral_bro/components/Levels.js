@@ -95,6 +95,6 @@ const lvl5 = {
   ]
 };
 
-module.exports = { lvl1, lvl2, lvl3, lvl4, lvl5 }
+export default { lvl1, lvl2, lvl3, lvl4, lvl5 }
 
 
