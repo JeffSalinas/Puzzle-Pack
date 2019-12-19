@@ -44,8 +44,6 @@ const App = () => {
         }
     }, []);
 
-
-
     useEffect(() => {
         document.addEventListener("click", trackerOn);
 
@@ -62,13 +60,13 @@ const App = () => {
         }
     });
 
-    function changeTracker(event) {
+    const changeTracker = (event) => {
         event.preventDefault();
 
         setKeyTracker(false);
     }
 
-    function trackerOn(event) {
+    const trackerOn = (event) => {
         event.preventDefault();
 
         setKeyTracker(true);
@@ -89,7 +87,7 @@ const App = () => {
         }
     }, [brocation, fullBoard]);
 
-    function submitPassword(e) {
+    const submitPassword = (e) => {
         e.preventDefault();
 
         for (let lvl = 0; lvl < levelArray.length; lvl++) {
@@ -108,7 +106,7 @@ const App = () => {
         setPassword('');
     }
 
-    function shift(event) {
+    const shift = (event) => {
         if (event.shiftKey === false && shiftDown === true) {
             let newView = [];
 
@@ -150,7 +148,7 @@ const App = () => {
         setStart(true);
     }
 
-    function syncView () {
+    const syncView = () => {
         let newView = [];
         for (let i = boardLocation.row; i < boardLocation.row + 12; i++) {
             newView.push(fullBoard[i].slice(boardLocation.col, boardLocation.col + 18));
@@ -159,7 +157,7 @@ const App = () => {
         setBoardView(newView);
     }
 
-    function findBro() {
+    const findBro = () => {
         for (let row = 0; row < fullBoard.length; row++) {
             for (let col = 0; col < fullBoard[row].length; col++) {
                 if (fullBoard[row][col] === './images/dudeRight.png' || fullBoard[row][col] === './images/dudeLeft.png'){
@@ -575,9 +573,10 @@ const App = () => {
             }
         } else if (event.key === 'ArrowDown') {
             if (broRight) {
-                //if block on right and nothing on top, pick up
+                //if block on right and nothing on top || on top of block pick up
                 if (newBoard[brocation.row][brocation.col + 1] === './images/block.png' &&
-                    newBoard[brocation.row - 1][brocation.col] === './images/empty.png') {
+                    newBoard[brocation.row - 1][brocation.col] === './images/empty.png' &&
+                    newBoard[brocation.row - 1][brocation.col + 1] === './images/empty.png') {
                     newBoard[brocation.row - 1][brocation.col] = './images/block.png'
                     newBoard[brocation.row][brocation.col + 1] = './images/empty.png'
                     setFullBoard(newBoard);
@@ -611,9 +610,10 @@ const App = () => {
 
                     setFullBoard(newBoard);
                 }
-                //if block on left and nothing on top, pick up
+                //if block on left and nothing on top || on block, pick up
             } else if (newBoard[brocation.row][brocation.col - 1] === './images/block.png' &&
-                newBoard[brocation.row - 1][brocation.col] === './images/empty.png') {
+                newBoard[brocation.row - 1][brocation.col] === './images/empty.png' &&
+                newBoard[brocation.row - 1][brocation.col - 1] === './images/empty.png') {
                 newBoard[brocation.row - 1][brocation.col] = './images/block.png'
                 newBoard[brocation.row][brocation.col - 1] = './images/empty.png'
                 setFullBoard(newBoard);
@@ -657,7 +657,7 @@ const App = () => {
 /* ///////////////////////  VIEW   ///////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////*/
 
-    function moveView (event) {
+    const moveView = (event) => {
         if (!shiftDown) {
             let location = {
                 row: boardLocation.row,
@@ -744,7 +744,7 @@ const App = () => {
         }
     }
 
-    function checkWin() {
+    const checkWin = () => {
         if (brocation.row === doorLocation.row && brocation.col === doorLocation.col) {
             setLevel(level + 1)
         }
