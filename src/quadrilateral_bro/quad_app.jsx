@@ -44,6 +44,16 @@ const App = () => {
         }
     }, []);
 
+
+
+    useEffect(() => {
+        document.addEventListener("click", trackerOn);
+
+        return () => {
+            document.removeEventListener("click", trackerOn);
+        }
+    }, [keyTracker]);
+
     useEffect(() => {
         document.addEventListener("keyup", shift);
 
@@ -56,6 +66,12 @@ const App = () => {
         event.preventDefault();
 
         setKeyTracker(false);
+    }
+
+    function trackerOn(event) {
+        event.preventDefault();
+
+        setKeyTracker(true);
     }
 
     useEffect(() => {
@@ -236,14 +252,15 @@ const App = () => {
                         row: boardLocation.row,
                         col: boardLocation.col
                     }
+
                     if (brocation.col - 1 <= boardLocation.col + 8 && 
                         boardLocation.col !== 0) {
                         newBoardLocation.col--;
                     }
 
+                    setBoardLocation(newBoardLocation);
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation);
 
                 //moves but doesn't fall
                 } else {
@@ -261,14 +278,15 @@ const App = () => {
                         row: boardLocation.row,
                         col: boardLocation.col
                     }
+
                     if (brocation.col - 1 <= boardLocation.col + 8 &&
                         boardLocation.col !== 0) {
                         newBoardLocation.col--;
                     }
 
+                    setBoardLocation(newBoardLocation);
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation);
                 }
                 //if left space is empty or a door, and no block is above. 
             } else if (newBoard[brocation.row][brocation.col - 1] === './images/empty.png' ||
@@ -301,9 +319,9 @@ const App = () => {
 
                     newBoard[brocation.row][brocation.col] = './images/empty.png';
 
+                    setBoardLocation(newBoardLocation);
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation);
 
                 } else {
                     newBoard[brocation.row][brocation.col - 1] = './images/dudeLeft.png'
@@ -323,9 +341,9 @@ const App = () => {
                         newBoardLocation.col--;
                     }
 
+                    setBoardLocation(newBoardLocation);
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation);
 
                     }
                 }
@@ -367,9 +385,9 @@ const App = () => {
                         newBoardLocation.col++;
                     }
 
+                    setBoardLocation(newBoardLocation)
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation)
 
                     //moves but doesn't fall
                 } else {
@@ -392,9 +410,9 @@ const App = () => {
                         newBoardLocation.col++;
                     }
 
+                    setBoardLocation(newBoardLocation)
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation)
                 }
       
                 //if right empty or door, move bro
@@ -426,9 +444,9 @@ const App = () => {
                         newBoardLocation.col++;
                     }
 
+                    setBoardLocation(newBoardLocation)
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation)
 
                 } else {
                     newBoard[brocation.row][brocation.col + 1] = './images/dudeRight.png';
@@ -446,9 +464,9 @@ const App = () => {
                         boardLocation.col + 17 !== fullBoard[0].length - 1) {
                         newBoardLocation.col++;
                     }
+                    setBoardLocation(newBoardLocation)
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation)
                 }
             } 
         } else if (event.key === 'ArrowUp') {
@@ -478,9 +496,9 @@ const App = () => {
                         newBoardLocation.col++;
                     }
 
+                    setBoardLocation(newBoardLocation)
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation)
                 //if block on right and empty space or door above, move up
                 } else if (rightBlock && rightUpEmpty) {
                     newBoard[brocation.row - 1][brocation.col + 1] = './images/dudeRight.png';
@@ -499,9 +517,9 @@ const App = () => {
                         newBoardLocation.col++;
                     }
 
+                    setBoardLocation(newBoardLocation)
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation)
                 }
             } else if (!broRight) {
                 let leftBlock = newBoard[brocation.row][brocation.col - 1] === './images/brick.png' ||
@@ -529,9 +547,9 @@ const App = () => {
                         newBoardLocation.col--;
                     }
 
+                    setBoardLocation(newBoardLocation)
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation)
                     //if block on left and empty space above, move up
                 } else if (leftBlock && leftUpEmpty) {
                     newBoard[brocation.row - 1][brocation.col - 1] = './images/dudeLeft.png';
@@ -550,9 +568,9 @@ const App = () => {
                         newBoardLocation.col--;
                     }
 
+                    setBoardLocation(newBoardLocation)
                     setFullBoard(newBoard);
                     setBrocation(newBrocation);
-                    setBoardLocation(newBoardLocation)
                 }
             }
         } else if (event.key === 'ArrowDown') {
