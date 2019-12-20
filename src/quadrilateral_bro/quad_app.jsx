@@ -2,25 +2,30 @@ import React, {useEffect, useState} from 'react';
 import { NavLink } from "react-router-dom";
 import Row from './components/row.jsx';
 import Popup from './components/popup.jsx';
+import PandaRace from './components/PandaRace.jsx';
 import Password from './components/password.jsx';
 import levels from './components/Levels.js';
 const levelArray = Object.keys(levels);
 
 const App = () => {
-    const [attempt, setAttempt] = useState(0);
-    const [boardLocation, setBoardLocation] = useState({ row: 0, col: 0 });
-    const [boardView, setBoardView] = useState([]);
-    const [brocation, setBrocation] = useState({ row: 0, col: 0 });
-    const [broRight, setBroRight] = useState(true);
-    const [doorLocation, setDoorLocation] = useState({ row: 0, col: 0 });
-    const [fullBoard, setFullBoard] = useState([]);
-    const [keyTracker, setKeyTracker] = useState(true);
-    const [level, setLevel] = useState(0);
-    const [password, setPassword] = useState('');
-    const [pswdScreen, setPswdScreen] = useState(true);
-    const [shiftDown, setShiftDown] = useState(false);
-    const [start, setStart] = useState(true);
-    const [viewLocation, setViewLocation] = useState({ row: 0, col: 0 });
+    const [ attempt, setAttempt ] = useState(0);
+    const [ boardLocation, setBoardLocation ] = useState({ row: 0, col: 0 });
+    const [ boardView, setBoardView ] = useState([]);
+    const [ brocation, setBrocation ] = useState({ row: 0, col: 0 });
+    const [ broRight, setBroRight ] = useState(true);
+    const [ doorLocation, setDoorLocation ] = useState({ row: 0, col: 0 });
+    const [ fullBoard, setFullBoard ] = useState([]);
+    const [ highScore, setHighScore ] = useState([{name: 'Jeff', time: '2:16'}, {name: 'Julia', time: '3:45'}, {name: 'Arohan', time: '4:13'}]);
+    const [ keyTracker, setKeyTracker ] = useState(true);
+    const [ level, setLevel ] = useState(0);
+    const [ pandaScreen, setPandaScreen ] = useState(false);
+    const [ password, setPassword ] = useState('');
+    const [ pswdScreen, setPswdScreen ] = useState(true);
+    const [ playingRace, setPlayingRace ] = useState(false);
+    const [ raceName, setRaceName ] = useState('');
+    const [ shiftDown, setShiftDown ] = useState(false);
+    const [ start, setStart ] = useState(true);
+    const [ viewLocation, setViewLocation ] = useState({ row: 0, col: 0 });
     
     useEffect (() => {
         if (keyTracker) {
@@ -75,6 +80,12 @@ const App = () => {
         }
     }, [brocation, fullBoard]);
 
+    const submitRaceName = (event) => {
+        event.preventDefault();
+
+        setRaceName(event.target.value);
+    }
+
     const changeTracker = (event) => {
         event.preventDefault();
 
@@ -93,6 +104,7 @@ const App = () => {
         for (let lvl = 0; lvl < levelArray.length; lvl++) {
             if (levels[levelArray[lvl]].password === password) {
                 setPassword('Kubernetes!');
+
                 setKeyTracker(true);
                 setTimeout(() => {
                     setLevel(lvl);
@@ -201,14 +213,32 @@ const App = () => {
         if (pswdScreen) {
             if (start) {
                 setPswdScreen(false);
+                setPandaScreen(true);
             }
             return;
         }
 
-        if (start) {
-            setStart(false);
+        if (pandaScreen) {
+            if (start) {
+                setPandaScreen(false);
+            }
+
+            if (playingRace) {
+                setStart(false);
+            }
+
             return;
         }
+        
+        if (start) {
+            setStart(false);
+        }
+
+        if (!playingRace && start) {
+            setStart(false);
+            return;
+        } 
+
 
         if (event.key === 'r') {
             mountLevel();
@@ -222,7 +252,7 @@ const App = () => {
             if (broRight) {
                 broDirection(false)
             }
-
+            
             //if left is empty or door, and block on head, and higher than 2nd to last row.
             if ((newBoard[brocation.row][brocation.col - 1] === './images/empty.png' ||
                 newBoard[brocation.row][brocation.col - 1] === './images/door.png') &&
@@ -289,7 +319,6 @@ const App = () => {
                 //if left space is empty or a door, and no block is above. 
             } else if (newBoard[brocation.row][brocation.col - 1] === './images/empty.png' ||
                 newBoard[brocation.row][brocation.col - 1] === './images/door.png') {
-
                     // if left/down space empty, fall down
                 if (newBoard[brocation.row + 1][brocation.col - 1] === './images/empty.png') {
                     let newBrocation = {
@@ -754,16 +783,16 @@ const App = () => {
         <div className="viewPort" >
             <div id="quadGameBoard">
                 {pswdScreen && <Password password={password} setPassword={(e) => setPassword(e.target.value)} submitPassword={submitPassword}/>}
-                {start && <Popup currentlvl={level + 1} level={levels[levelArray[level]]} />}
+                {pandaScreen && <PandaRace submitRaceName={submitRaceName} setRaceName={(e) => setRaceName(e.target.value)} raceName={raceName} highScore={highScore}/>}
+                {start && !pandaScreen && !playingRace && <Popup currentlvl={level + 1} level={levels[levelArray[level]]} />}
                 {boardView.map((row, i) => {
                     return (
                         <Row 
-                            
                             row={row}
                             rowIndex={i}
                             key={i}
                         />
-                    )
+                    );
                 })}
             </div>
             
