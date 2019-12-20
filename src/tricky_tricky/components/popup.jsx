@@ -10,7 +10,7 @@ const Popup = (props) => {
           <div className="title">
             <h3>Tricky Tricky!</h3>
           </div>
-          <div id="text">
+          <div id="trickyText">
               Level: {props.currentlvl}<br></br>
               Moves: {props.level.moves}<br></br>
               Password: {props.level.password}

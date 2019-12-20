@@ -41,7 +41,6 @@ class App extends Component {
             this.passwordHandler(event);
             return;
         }
-        console.log('bob')
         this.move(event)
     }
 
@@ -107,7 +106,6 @@ class App extends Component {
     }
 
     move(event) {
-        console.log('hi')
         if (this.state.pswdScreen) {
             if (this.state.start) {
                 this.setState(() => { return { pswdScreen: false}; });
