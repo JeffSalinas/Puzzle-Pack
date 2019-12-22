@@ -14,7 +14,7 @@ const PandaRace = ({ submitRaceName, raceName, setRaceName, highScore }) => {
           </p>
           <div id="text" style={{fontSize: '17px', padding: '0 25px 5px 25px', alignSelf: 'flex-end'}}> 
             <form onSubmit={submitRaceName}>
-              <input placeholder="Enter Name To Race:" value={raceName} onChange={setRaceName}></input>
+              <input id="name_input"placeholder="Enter Name To Race:" value={raceName} onChange={setRaceName}></input>
             </form>
             <div className="highScoreListItemContainer">
               <p className="highScoreListName" style={{ fontWeight: 'bold', width: '100%', textAlign: 'center' }}>High Score</p>

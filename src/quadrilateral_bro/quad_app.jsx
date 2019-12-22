@@ -49,6 +49,17 @@ const App = () => {
         }
     }, []);
 
+    useEffect (() => {
+        if (pandaScreen) {
+            let nameField = document.getElementById('name_input');
+            nameField.addEventListener('click', changeTracker);
+    
+            return () => {
+                nameField.removeEventListener('click', changeTracker);
+            }
+        }
+    }, [pandaScreen]);
+
     useEffect(() => {
         document.addEventListener("click", trackerOn);
 
@@ -82,21 +93,23 @@ const App = () => {
 
     const submitRaceName = (event) => {
         event.preventDefault();
+        console.log('hi')
+        setPandaScreen(false);
+        setKeyTracker(true);
 
-        setRaceName(event.target.value);
-    }
+    };
 
     const changeTracker = (event) => {
         event.preventDefault();
 
         setKeyTracker(false);
-    }
+    };
 
     const trackerOn = (event) => {
         event.preventDefault();
 
         setKeyTracker(true);
-    }
+    };
 
     const submitPassword = (e) => {
         e.preventDefault();
