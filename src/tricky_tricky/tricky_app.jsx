@@ -377,9 +377,11 @@ class App extends Component {
 
                     <div id="bottomSpace"></div>
                 </div>
+                <div id="home_container">
                     <NavLink to='/'>    
-                        <button className="homebutton">Home</button>
+                        <button id="homebutton">Home</button>
                     </NavLink>
+                </div>
 
                 <p className="instructTitles">Objective:</p> 
                 <ul>

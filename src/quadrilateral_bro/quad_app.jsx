@@ -93,10 +93,11 @@ const App = () => {
 
     const submitRaceName = (event) => {
         event.preventDefault();
-        console.log('hi')
+
+        setPlayingRace(true);
+        setStart(false);
         setPandaScreen(false);
         setKeyTracker(true);
-
     };
 
     const changeTracker = (event) => {
@@ -209,7 +210,6 @@ const App = () => {
 
     const broDirection = (boolean) => {
         setBroRight(boolean);
-
         let newBoard = fullBoard.slice();
         boolean ? newBoard[brocation.row][brocation.col] = './images/dudeRight.png' : 
             newBoard[brocation.row][brocation.col] = './images/dudeLeft.png';
@@ -263,7 +263,7 @@ const App = () => {
             return;
         } else if (event.key === 'ArrowLeft') {
             if (broRight) {
-                broDirection(false)
+                broDirection(false);
             }
             
             //if left is empty or door, and block on head, and higher than 2nd to last row.
@@ -808,10 +808,12 @@ const App = () => {
                     );
                 })}
             </div>
-            
-            <NavLink to='/'>
-                <button className="homebutton">Home</button>
-            </NavLink>
+            <div id="home_container">
+                <p id="timer_display">{'Timer ' + '2:34'}</p>
+                <NavLink to='/'>
+                    <button id="homebutton">Home</button>
+                </NavLink>
+            </div>
             <p className="instructTitles">Objective:</p>
             <ul>
                 <li>
