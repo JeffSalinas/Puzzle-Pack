@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import Axios from 'axios';
 import { NavLink } from "react-router-dom";
+import React, {useEffect, useState} from 'react';
 import moment from 'moment';
 import PandaRace from './components/PandaRace.jsx';
 import Password from './components/password.jsx';
@@ -16,7 +17,7 @@ const App = () => {
     const [ broRight, setBroRight ] = useState(true);
     const [ doorLocation, setDoorLocation ] = useState({ row: 0, col: 0 });
     const [ fullBoard, setFullBoard ] = useState([]);
-    const [ highScore, setHighScore ] = useState([{name: 'Jeff', time: '2:16'}, {name: 'Julia', time: '3:45'}, {name: 'Arohan', time: '4:13'}]);
+    const [ highScore, setHighScore ] = useState([]);
     const [ keyTracker, setKeyTracker ] = useState(true);
     const [ level, setLevel ] = useState(0);
     const [ pandaScreen, setPandaScreen ] = useState(false);
@@ -30,6 +31,18 @@ const App = () => {
     const [ time, setTime ] = useState(['0', '00']);
     const [ viewLocation, setViewLocation ] = useState({ row: 0, col: 0 });
     
+    useEffect (() => {
+        Axios.post('./user', {
+            userName: 'Jack',
+            seconds: 200
+        })
+        .then(({ data }) =>{
+            console.log(data);
+        })
+
+        // setHighScore([{ name: 'Jeff', time: '2:16' }, { name: 'Julia', time: '3:45' }, { name: 'Arohan', time: '4:13' }])
+    }, []);
+
     useEffect (() => {
         if (keyTracker) {
             document.addEventListener("keydown", move);
@@ -114,7 +127,6 @@ const App = () => {
                     seconds = '00';
                 }
     
-                console.log(time);
                 setTime([min, seconds])
             }, 1000)
         }
