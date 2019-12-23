@@ -32,16 +32,26 @@ const App = () => {
     const [ viewLocation, setViewLocation ] = useState({ row: 0, col: 0 });
     
     useEffect (() => {
-        Axios.post('./user', {
-            userName: 'Jack',
-            seconds: 200
+        Axios.get('./users')
+        .then(({ data }) => {
+            setHighScore(data.splice(0, 3));
         })
-        .then(({ data }) =>{
-            console.log(data);
-        })
-
-        // setHighScore([{ name: 'Jeff', time: '2:16' }, { name: 'Julia', time: '3:45' }, { name: 'Arohan', time: '4:13' }])
     }, []);
+
+    useEffect (() => {
+        if (playingRace && level === 4) {
+            let newTime = Number(time[1]);
+            newTime += Number(time[0]) * 60
+    
+            Axios.post('./user', {
+                userName: raceName,
+                seconds: newTime
+            })
+            .then(({ data }) =>{
+                console.log(data);
+            })
+        }
+    }, [level]);
 
     useEffect (() => {
         if (keyTracker) {
