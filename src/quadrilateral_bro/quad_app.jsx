@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { NavLink } from "react-router-dom";
-import Row from './components/row.jsx';
-import Popup from './components/popup.jsx';
+import moment from 'moment';
 import PandaRace from './components/PandaRace.jsx';
 import Password from './components/password.jsx';
+import Popup from './components/popup.jsx';
+import Row from './components/row.jsx';
 import levels from './components/Levels.js';
 const levelArray = Object.keys(levels);
 
@@ -25,6 +26,8 @@ const App = () => {
     const [ raceName, setRaceName ] = useState('');
     const [ shiftDown, setShiftDown ] = useState(false);
     const [ start, setStart ] = useState(true);
+    const [ startTime, setStartTime ] = useState('')
+    const [ time, setTime ] = useState(['0', '00']);
     const [ viewLocation, setViewLocation ] = useState({ row: 0, col: 0 });
     
     useEffect (() => {
@@ -91,9 +94,36 @@ const App = () => {
         }
     }, [brocation, fullBoard]);
 
+    useEffect(() => {
+
+        if (playingRace) {
+            setTimeout(() => {
+                let seconds = moment(new Date()).diff(startTime, 'seconds');
+                let min = Math.floor(seconds / 60).toString();
+                seconds = (seconds % 60).toString();
+    
+                if (seconds.length === 1) {
+                    seconds = '0' + seconds;
+                }
+    
+                if (min === "NaN") {
+                    min = '0';
+                } 
+                
+                if (seconds === 'NaN') {
+                    seconds = '00';
+                }
+    
+                console.log(time);
+                setTime([min, seconds])
+            }, 1000)
+        }
+    }, [time, startTime]);
+
     const submitRaceName = (event) => {
         event.preventDefault();
 
+        setStartTime(moment(new Date()));
         setPlayingRace(true);
         setStart(false);
         setPandaScreen(false);
@@ -809,7 +839,7 @@ const App = () => {
                 })}
             </div>
             <div id="home_container">
-                <p id="timer_display">{'Timer ' + '2:34'}</p>
+                {playingRace && <p id="timer_display">{'Timer ' + time[0] + ':' + time[1]}</p>}
                 <NavLink to='/'>
                     <button id="homebutton">Home</button>
                 </NavLink>
