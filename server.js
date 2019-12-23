@@ -41,6 +41,10 @@ app.get('/users', (req, res) => {
         let seconds = el.seconds;
         let min = Math.floor(seconds / 60).toString();
         seconds = (seconds % 60).toString();
+
+        if (seconds.length === 1) {
+          seconds = '0' + seconds;
+        }
         
         newFormat.push({name: el.userName, time: min + ':' + seconds}); 
       });

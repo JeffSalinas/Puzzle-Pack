@@ -16,7 +16,7 @@ const Password = ({password, setPassword, submitPassword}) => {
               <input id="password_input" value={password} onChange={setPassword}></input>
             </form>
           </div>
-          <p className="pswInstruction">{'Password ? jumpToLvl() : '}<br></br>
+          <p className="pswInstruction">{'Enter A Password Or' } <br></br>
           {'*Press Any Key To Begin*'}
           </p>
         </div>

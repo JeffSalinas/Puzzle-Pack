@@ -30,16 +30,19 @@ const App = () => {
     const [ startTime, setStartTime ] = useState('')
     const [ time, setTime ] = useState(['0', '00']);
     const [ viewLocation, setViewLocation ] = useState({ row: 0, col: 0 });
+    var tick;
     
     useEffect (() => {
-        Axios.get('./users')
-        .then(({ data }) => {
-            setHighScore(data.splice(0, 3));
-        })
+        getData();
     }, []);
 
     useEffect (() => {
         if (playingRace && level === 4) {
+            clearTimeout(tick);
+            setTimeout(() => {
+                setTime([time[0], time[1]]);
+            })
+
             let newTime = Number(time[1]);
             newTime += Number(time[0]) * 60
     
@@ -47,9 +50,9 @@ const App = () => {
                 userName: raceName,
                 seconds: newTime
             })
-            .then(({ data }) =>{
-                console.log(data);
-            })
+            .then(() => {
+                getData();
+            });
         }
     }, [level]);
 
@@ -119,8 +122,8 @@ const App = () => {
 
     useEffect(() => {
 
-        if (playingRace) {
-            setTimeout(() => {
+        if (playingRace && level < 4) {
+            tick = setTimeout(() => {
                 let seconds = moment(new Date()).diff(startTime, 'seconds');
                 let min = Math.floor(seconds / 60).toString();
                 seconds = (seconds % 60).toString();
@@ -141,6 +144,19 @@ const App = () => {
             }, 1000)
         }
     }, [time, startTime]);
+
+    const getData = () => {
+        Axios.get('./users')
+        .then(({ data }) => {
+            let top3 = [];
+
+            for (let i = 0; i < 3; i++) {
+                top3.push(data[i]);
+            }
+
+            setHighScore([data, top3]);
+        })
+    }
 
     const submitRaceName = (event) => {
         event.preventDefault();
@@ -185,6 +201,7 @@ const App = () => {
     }
 
     const shift = (event) => {
+        event.preventDefault();
         if (event.shiftKey === false && shiftDown === true) {
             let newView = [];
 
@@ -848,7 +865,7 @@ const App = () => {
         <div className="viewPort" >
             <div id="quadGameBoard">
                 {pswdScreen && <Password password={password} setPassword={(e) => setPassword(e.target.value)} submitPassword={submitPassword}/>}
-                {pandaScreen && <PandaRace submitRaceName={submitRaceName} setRaceName={(e) => setRaceName(e.target.value)} raceName={raceName} highScore={highScore}/>}
+                {pandaScreen && <PandaRace submitRaceName={submitRaceName} setRaceName={(e) => setRaceName(e.target.value)} raceName={raceName} highScore={highScore[1]}/>}
                 {start && !pandaScreen && !playingRace && <Popup currentlvl={level + 1} level={levels[levelArray[level]]} />}
                 {boardView.map((row, i) => {
                     return (
@@ -861,38 +878,72 @@ const App = () => {
                 })}
             </div>
             <div id="home_container">
+                {level === 4 ? <p id="timer_display">The End</p> : <p id="timer_display">{'Lvl: ' + (level + 1)}</p>}
                 {playingRace && <p id="timer_display">{'Timer ' + time[0] + ':' + time[1]}</p>}
                 <NavLink to='/'>
                     <button id="homebutton">Home</button>
                 </NavLink>
             </div>
-            <p className="instructTitles">Objective:</p>
-            <ul>
-                <li>
-                    Move Quadrilateral Bro to the door to complete each level.
-                </li>
-                <li>
-                    Keep track of the lvl password to skip ahead after refresh. 
-                </li>
-            </ul>
-            <p className="instructTitles">Controls:</p>
-            <ul>
-                <li>Use <strong>Left/Right</strong> arrow keys to move left or right. These <br></br> 
-                    keys will only turn Quadrilateral Bro if he is trapped in a <br></br>
-                    space with no open position to the left or right.</li>
-                <li>Use <strong>Down</strong> arrow key to lift or place a block up or down. <br></br>
-                    You can stack block objects two blocks high.
-                </li>
-                <li>
-                    Use <strong>Up</strong> arrow key to step up one level. 
-                </li>
-                <li>
-                    Use <strong>Shift</strong> + <strong>Arrow Keys</strong> look ahead and explore the level.
-                </li>
-                <li>
-                    Use <strong>R</strong> key to restart the current level.
-                </li>
-            </ul>
+            {level === 4 ? 
+            <div style={{width: '334px', margin: '0 50px'}}>
+                <div className="highScoreListItemContainer">
+                    <p className="highScoreListName" style={{ fontWeight: 'bold', width: '100%', textAlign: 'left', fontSize: '20px' }}>The Great Panda Race High Scores:</p>
+                    <p className="highScoreListName" style={{ fontWeight: 'bold' }}>Name:</p>
+                    <p className="highScoreListTime" style={{ fontWeight: 'bold' }}>Time:</p>
+                </div>
+                {highScore[0].map((el, index) => {
+                    return (
+                        <div key={index} className="highScoreListItemContainer">
+                            <p className="highScoreListName">{[index + 1].toString() + '. ' + el.name}</p>
+                            <p className="highScoreListTime">{el.time}</p>
+                        </div>
+                    );
+                })}
+            </div>
+            : <div style={{ width: '414px', margin: '0 0 0 20px' }}>
+                <p className="instructTitles">Objective:</p>
+                <ul>
+                    <li>
+                        Move Quadrilateral Bro to the door to complete each level
+                    </li>
+                    <li>
+                        Keep track of the lvl password to skip ahead after refresh
+                    </li>
+                </ul>
+                <p className="instructTitles">The Great Panda Race:</p>
+                <ul>
+                    <li>
+                        An optional gameplay feature that lets users race against <br></br> 
+                        previous players 
+                    </li>
+                    <li>
+                        Watch the timer and race through 4 levels
+                    </li>
+                    <li>
+                        Enter your name and press <strong>Enter</strong> to play
+                    </li>
+                </ul>
+
+                <p className="instructTitles">Controls:</p>
+                <ul>
+                    <li>Use <strong>Left/Right</strong> arrow keys to move left or right. These <br></br> 
+                        keys will only turn Quadrilateral Bro if he is trapped in a <br></br>
+                        space with no open position to the left or right
+                    </li>
+                    <li>Use <strong>Down</strong> arrow key to lift or place a block up or down <br></br>
+                        You can stack block objects two blocks high
+                    </li>
+                    <li>
+                        Use <strong>Up</strong> arrow key to step up one level
+                    </li>
+                    <li>
+                        Use <strong>Shift</strong> + <strong>Arrow Keys</strong> look ahead and explore the level
+                    </li>
+                    <li>
+                        Use <strong>R</strong> key to restart the current level
+                    </li>
+                </ul>
+            </div>}
         </div>
     )
 }
