@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { NavLink } from "react-router-dom";
 import React, {useEffect, useState} from 'react';
+import MobileButtons from './components/MobileButtons.jsx';
 import moment from 'moment';
 import PandaRace from './components/PandaRace.jsx';
 import Password from './components/password.jsx';
@@ -862,88 +863,92 @@ const App = () => {
     }
 
     return (
-        <div className="viewPort" >
-            <div id="quadGameBoard">
-                {pswdScreen && <Password password={password} setPassword={(e) => setPassword(e.target.value)} submitPassword={submitPassword}/>}
-                {pandaScreen && <PandaRace submitRaceName={submitRaceName} setRaceName={(e) => setRaceName(e.target.value)} raceName={raceName} highScore={highScore[1]}/>}
-                {start && !pandaScreen && !playingRace && <Popup currentlvl={level + 1} level={levels[levelArray[level]]} />}
-                {boardView.map((row, i) => {
-                    return (
-                        <Row 
-                            row={row}
-                            rowIndex={i}
-                            key={i}
-                        />
-                    );
-                })}
-            </div>
-            <div id="home_container">
-                {level === 4 ? <p id="timer_display">The End</p> : <p id="timer_display">{'Lvl: ' + (level + 1)}</p>}
-                {playingRace && <p id="timer_display">{'Timer ' + time[0] + ':' + time[1]}</p>}
-                <NavLink to='/'>
-                    <button id="homebutton">Home</button>
-                </NavLink>
-            </div>
-            {level === 4 ? 
-            <div style={{width: '334px', margin: '0 50px'}}>
-                <div className="highScoreListItemContainer">
-                    <p className="highScoreListName" style={{ fontWeight: 'bold', width: '100%', textAlign: 'left', fontSize: '20px' }}>The Great Panda Race High Scores:</p>
-                    <p className="highScoreListName" style={{ fontWeight: 'bold' }}>Name:</p>
-                    <p className="highScoreListTime" style={{ fontWeight: 'bold' }}>Time:</p>
+        <div id="button-viewPort-container">
+            <div className="viewPort" >
+                <div id="quadGameBoard">
+                    {pswdScreen && <Password password={password} setPassword={(e) => setPassword(e.target.value)} submitPassword={submitPassword}/>}
+                    {pandaScreen && <PandaRace submitRaceName={submitRaceName} setRaceName={(e) => setRaceName(e.target.value)} raceName={raceName} highScore={highScore[1]}/>}
+                    {start && !pandaScreen && !playingRace && <Popup currentlvl={level + 1} level={levels[levelArray[level]]} />}
+                    {boardView.map((row, i) => {
+                        return (
+                            <Row 
+                                row={row}
+                                rowIndex={i}
+                                key={i}
+                            />
+                        );
+                    })}
                 </div>
-                {highScore[0].map((el, index) => {
-                    return (
-                        <div key={index} className="highScoreListItemContainer">
-                            <p className="highScoreListName">{[index + 1].toString() + '. ' + el.name}</p>
-                            <p className="highScoreListTime">{el.time}</p>
-                        </div>
-                    );
-                })}
-            </div>
-            : <div style={{ width: '414px', margin: '0 0 0 20px' }}>
-                <p className="instructTitles">Objective:</p>
-                <ul>
-                    <li>
-                        Move Quadrilateral Bro to the door to complete each level
-                    </li>
-                    <li>
-                        Keep track of the lvl password to skip ahead after refresh
-                    </li>
-                </ul>
-                <p className="instructTitles">The Great Panda Race:</p>
-                <ul>
-                    <li>
-                        An optional gameplay feature that lets users race against <br></br> 
-                        previous players 
-                    </li>
-                    <li>
-                        Watch the timer and race through 4 levels
-                    </li>
-                    <li>
-                        Enter your name and press <strong>Enter</strong> to play
-                    </li>
-                </ul>
+                <div id="home_container">
+                    {level === 4 ? <p id="timer_display">The End</p> : <p id="timer_display">{'Lvl: ' + (level + 1)}</p>}
+                    {playingRace && <p id="timer_display">{'Timer ' + time[0] + ':' + time[1]}</p>}
+                    <NavLink to='/'>
+                        <button id="homebutton">Home</button>
+                    </NavLink>
+                </div>
+                {level === 4 ? 
+                <div style={{width: '334px', margin: '0 50px'}}>
+                    <div className="highScoreListItemContainer">
+                        <p className="highScoreListName" style={{ fontWeight: 'bold', width: '100%', textAlign: 'left', fontSize: '20px' }}>The Great Panda Race High Scores:</p>
+                        <p className="highScoreListName" style={{ fontWeight: 'bold' }}>Name:</p>
+                        <p className="highScoreListTime" style={{ fontWeight: 'bold' }}>Time:</p>
+                    </div>
+                    {highScore[0].map((el, index) => {
+                        return (
+                            <div key={index} className="highScoreListItemContainer">
+                                <p className="highScoreListName">{[index + 1].toString() + '. ' + el.name}</p>
+                                <p className="highScoreListTime">{el.time}</p>
+                            </div>
+                        );
+                    })}
+                </div>
+                : <div style={{ width: '414px', margin: '0 0 0 20px' }}>
+                    <p className="instructTitles">Objective:</p>
+                    <ul>
+                        <li>
+                            Move Quadrilateral Bro to the door to complete each level
+                        </li>
+                        <li>
+                            Keep track of the lvl password to skip ahead after refresh
+                        </li>
+                    </ul>
+                    <p className="instructTitles">The Great Panda Race:</p>
+                    <ul>
+                        <li>
+                            An optional gameplay feature that lets users race against <br></br> 
+                            previous players 
+                        </li>
+                        <li>
+                            Watch the timer and race through 4 levels
+                        </li>
+                        <li>
+                            Enter your name and press <strong>Enter</strong> to play
+                        </li>
+                    </ul>
 
-                <p className="instructTitles">Controls:</p>
-                <ul>
-                    <li>Use <strong>Left/Right</strong> arrow keys to move left or right. These <br></br> 
-                        keys will only turn Quadrilateral Bro if he is trapped in a <br></br>
-                        space with no open position to the left or right
-                    </li>
-                    <li>Use <strong>Down</strong> arrow key to lift or place a block up or down <br></br>
-                        You can stack block objects two blocks high
-                    </li>
-                    <li>
-                        Use <strong>Up</strong> arrow key to step up one level
-                    </li>
-                    <li>
-                        Use <strong>Shift</strong> + <strong>Arrow Keys</strong> look ahead and explore the level
-                    </li>
-                    <li>
-                        Use <strong>R</strong> key to restart the current level
-                    </li>
-                </ul>
-            </div>}
+                    <p className="instructTitles">Controls:</p>
+                    <ul>
+                        <li>Use <strong>Left/Right</strong> arrow keys to move left or right. These <br></br> 
+                            keys will only turn Quadrilateral Bro if he is trapped in a <br></br>
+                            space with no open position to the left or right
+                        </li>
+                        <li>Use <strong>Down</strong> arrow key to lift or place a block up or down <br></br>
+                            You can stack block objects two blocks high
+                        </li>
+                        <li>
+                            Use <strong>Up</strong> arrow key to step up one level
+                        </li>
+                        <li>
+                            Use <strong>Shift</strong> + <strong>Arrow Keys</strong> look ahead and explore the level
+                        </li>
+                        <li>
+                            Use <strong>R</strong> key to restart the current level
+                        </li>
+                    </ul>
+                </div>}
+            </div>
+            <MobileButtons />
+
         </div>
     )
 }

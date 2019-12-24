@@ -1,5 +1,12 @@
+#button-viewPort-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+}
+
 .viewPort {
-  margin: auto;
+  /* margin: auto; */
   width: 434px;
 }
 
@@ -71,7 +78,7 @@
 }
 
 .popupContainer {
-  margin: auto;
+  /* margin: auto; */
   width: 434px;
 }
 
@@ -144,7 +151,6 @@ h3 {
 }
 
 .raceInstruction {
-  /* align-self: flex-end; */
   margin: 35px 0 5px 0;
   width: 201px;
   text-align: center;
@@ -222,6 +228,7 @@ li {
 }
 
 #homebutton {
+  border: 1px solid black;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
@@ -246,4 +253,47 @@ li {
   font-size: 15px;
   margin: 5px 0 0 0;
   padding: 0 0 0 10%;
+}
+
+
+/* Mobile Arrow Component */
+
+#mobile-button-container {
+  width: 154px;
+  height: 206px;
+  padding: 5px;
+}
+
+.UDContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#LRContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.LRButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  height: 90px;
+  width: 55px;
+  border-radius: 27px;
+  outline: none;
+}
+
+.UDButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  height: 55px;
+  width: 90px;
+  border-radius: 27px;
+  outline: none;
 }
