@@ -863,7 +863,8 @@ const App = () => {
     }
 
     return (
-        <div id="button-viewPort-container">
+        <div className="main-container">
+            <div className="shift-placeholder"></div>
             <div className="viewPort" >
                 <div id="quadGameBoard">
                     {pswdScreen && <Password password={password} setPassword={(e) => setPassword(e.target.value)} submitPassword={submitPassword}/>}
@@ -947,8 +948,8 @@ const App = () => {
                     </ul>
                 </div>}
             </div>
+            <div className="mobile-buttons-placeholder"></div>
             <MobileButtons />
-
         </div>
     )
 }

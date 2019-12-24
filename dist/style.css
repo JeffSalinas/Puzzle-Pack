@@ -3,10 +3,21 @@
   width: 100vw;
   display: flex;
   justify-content: space-between;
+  position: absolute;
+}
+
+#viewPort-place-holder {
+  min-width: 434px;
+  margin: auto;
+}
+
+.main-container {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .viewPort {
-  /* margin: auto; */
+  margin: auto;
   width: 434px;
 }
 
@@ -77,16 +88,26 @@
   background: red;
 }
 
+.popupMainContainer {
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  width: 100vw;
+}
+
 .popupContainer {
-  /* margin: auto; */
-  width: 434px;
+  margin: 0 auto;
+  height: 100vh;
+  /* position: absolute; */
+  display: flex;
+  /* justify-content: flex-start; */
 }
 
 .popupStyle {
   display: flex;
   flex-wrap: nowrap;
-  margin: 52px 116px;
-  position: absolute;
+  margin: 52px 117px;
+  position: relative;
   width: 200px;
   height: 150px;
   background-color: lightgrey;
@@ -296,4 +317,14 @@ li {
   width: 90px;
   border-radius: 27px;
   outline: none;
+}
+
+.shift-placeholder {
+  min-width: 57px;
+  height: 100%;
+}
+
+.mobile-buttons-placeholder {
+  min-width: 154px;
+  height: 100%;
 }
