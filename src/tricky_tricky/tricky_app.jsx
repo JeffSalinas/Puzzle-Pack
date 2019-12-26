@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { NavLink } from "react-router-dom";
 import levels from './components/Levels';
+import MobileButtons from './components/MobileButtons.jsx';
 import Row from './components/row.jsx';
 import Popup from './components/popup.jsx';
 import Out from './components/out.jsx';
@@ -22,19 +23,27 @@ class App extends Component {
             pswdScreen: true,
             lastPasswordKey: '',
             outOfMoves: false,
-            booyah: true
+            booyah: true,
+            isMobile: window.innerWidth <= 825
         };
-        this.routeKeydown = this.routeKeydown.bind(this)
+        this.routeKeydown = this.routeKeydown.bind(this);
+        this.resetMobile = this.resetMobile.bind(this);
     }
 
     componentDidMount() {
         this.mountLevel()
         document.addEventListener("keydown", this.routeKeydown);
+        window.addEventListener("resize", this.resetMobile);
     }
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.routeKeydown);
+        window.removeEventListener("resize", this.resetMobile);
     }
+
+    resetMobile() {
+        this.setState({isMobile: window.innerWidth <= 825});
+    };
 
     routeKeydown(event) {
         if (event.target.nodeName == 'INPUT') {
@@ -394,6 +403,7 @@ class App extends Component {
                     <li>Use <strong>Arrow Keys</strong> to move selector</li>
                     <li>Use <strong>Enter</strong> to swap the blocks in the selector window</li>
                 </ul>
+                {this.state.isMobile && <MobileButtons />}
             </div>
         )
     }

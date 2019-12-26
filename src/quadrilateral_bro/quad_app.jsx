@@ -304,7 +304,6 @@ const App = () => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////*/
     const move = (event) => {
         event.preventDefault();
-        console.log(event)
         let newBoard = fullBoard.slice();
 
         if (pswdScreen) {
@@ -792,11 +791,9 @@ const App = () => {
             
             setViewLocation(location)
         }
-        console.log(viewLocation.col);
         
         if (event.key === 'ArrowLeft') {
             if (viewLocation.col === 0) {
-                console.log(event.key)
                 return;
             }
 
@@ -815,7 +812,6 @@ const App = () => {
             setShiftDown(true);
 
         } else if (event.key === 'ArrowRight') {
-            console.log('hi')
             if (viewLocation.col + 17 === fullBoard[0].length - 1) {
                 return;
             }

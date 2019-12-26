@@ -8,7 +8,6 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 const MobileButtons = ({ shiftDown, setShiftDown }) => {
 
   const handleClick = (key) => {
-    console.log('click', shiftDown)
 
     var e = new KeyboardEvent("keydown", {
       cancelable: true,

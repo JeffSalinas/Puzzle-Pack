@@ -95,14 +95,14 @@
   display: flex;
   justify-content: flex-start;
   width: 100vw;
+  height: 290px;
 }
 
 .popupContainer {
   margin: 0 auto;
   height: 100vh;
-  /* position: absolute; */
   display: flex;
-  /* justify-content: flex-start; */
+  height: 290px;
 }
 
 .popupStyle {

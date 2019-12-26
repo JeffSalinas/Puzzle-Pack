@@ -5,9 +5,12 @@ A full stack implementation of two TI-83 calculator games:  Block Dude and Puzzl
 
 The Puzzle Pack splash page utilizes react-router, allowing users to select which game they would like to play.  Once a game is selected, a modal appears as an option for returning users to skip to a higher level. A second modal appears on each level to declare the level and password. 
 
-
 &nbsp; &nbsp; &nbsp; &nbsp;<img src="./demo/startblock.gif" width="344" height="480">
 &nbsp; &nbsp; &nbsp; &nbsp;<img src="./demo/movetopuzzle.gif" width="344" height="480">
+
+Conditionally rendered buttons to allow mobile users the same accessibility as keyboard users.
+
+&nbsp; &nbsp; &nbsp; &nbsp;<img src="./demo/mobile.gif">
 
 - - - -
 
@@ -21,6 +24,11 @@ To avoid making a mistake, users can use __Shift__ + __Arrow Keys__ to look ahea
 
 &nbsp; &nbsp; &nbsp; &nbsp;<img src="./demo/blockview.gif" width="384" height="258">
 &nbsp; &nbsp; &nbsp; &nbsp;<img src="./demo/restartblock.gif" width="384" height="258">
+
+The Great Panda Race is an optional gameplay feature that allows users to race against previous online users. Users will race through 4 levels against a timer. Upon completion, their name and time will be added to the high score list on a MongoDB Atlas database. The last level is a collection of bricks that create a panda. 
+
+&nbsp; &nbsp; &nbsp; &nbsp;<img src="./demo/pandaRace.gif">
+
 
 - - - -
 
@@ -41,7 +49,7 @@ npm install
 npm start
 ```
 
-Puzzle Pack uses MongoDB to record high scores! MongoDB should be running on your machine for this feature to work.
+Puzzle Pack uses MongoDB to record high scores! MongoDB should be running on your machine for this feature to work. To connect, create a config.js file in the db directory and export your connection URI.  
 
 - - - -
 
@@ -66,8 +74,8 @@ Puzzle Pack uses MongoDB to record high scores! MongoDB should be running on you
     <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1280px-Amazon_Web_Services_Logo.svg.png" alt="AWS" title="AWS" width="60px"/></td>
   </tr>
   <tr>
-  <td></td>
-    <td align="center"><img src="https://pbs.twimg.com/profile_images/1146106967477379073/J3fzYcnz_400x400.png" alt="MongoDB" title="MongoDB" width="60px"/></td>
+  <td align="center"><img src="https://miro.medium.com/max/5000/1*yqSYIZNfRPHeF-tCTrRrIw.png" alt="Material UI" title="Material UI" width="60px"/></td>
+    <td align="center"><img src="https://pbs.twimg.com/profile_images/1146106967477379073/J3fzYcnz_400x400.png" alt="MongoDB Atlas" title="MongoDB Atlas" width="60px"/></td>
     <td align="center"><img src="https://www.nginx.com/wp-content/uploads/2018/08/NGINX-logo-rgb-large.png" alt="Nginx" title="Nginx" width="60px"/></td>
   </tr>
   <tr>
@@ -78,10 +86,6 @@ Puzzle Pack uses MongoDB to record high scores! MongoDB should be running on you
 </table>
 
 - - - -
-
-### Potential Improvements
-- This application is currently only desktop friendly. I would like to add buttons for mobile users and adjust the CSS to resize for various screen sizes. 
-- The "move" function is very long and has lots of repeated logic for various conditional statements. I would like to add some thoughtful helper functions or a few custom react hooks to have more concise logic.
 
 ## Contributors
 [Jeff Salinas](https://github.com/JeffSalinas)  
