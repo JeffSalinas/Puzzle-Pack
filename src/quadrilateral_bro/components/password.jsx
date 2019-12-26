@@ -27,7 +27,7 @@ const Password = ({password, setPassword, submitPassword}) => {
       </div>,
       document.getElementById('password')
     )
-  )
-}
+  );
+};
 
 export default Password;

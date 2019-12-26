@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const port = 3000;
 
 app.use(express.static('dist'));
-app.use(express.json())
+app.use(express.json());
 
 app.post('/user', (req, res) => {
   const user = new pandaRace({
@@ -63,6 +63,6 @@ app.get('/*', function (req, res) {
       res.status(500).send(err)
     }
   })
-})
+});
 
 app.listen(port, () => console.log(`listening from port: ${port}`));

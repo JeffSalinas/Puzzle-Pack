@@ -31,7 +31,7 @@ const App = () => {
     const [ startTime, setStartTime ] = useState('')
     const [ time, setTime ] = useState(['0', '00']);
     const [ viewLocation, setViewLocation ] = useState({ row: 0, col: 0 });
-    const [ isMobile, setIsMobile ] = useState(window.innerWidth <= 813);
+    const [ isMobile, setIsMobile ] = useState(window.innerWidth <= 825);
     var tick;
     
     useEffect (() => {
@@ -121,7 +121,7 @@ const App = () => {
 
     useEffect(() => {
         findBro();
-    }, [start])
+    }, [start]);
 
     useEffect(() => {
         if (!start) {
@@ -169,7 +169,7 @@ const App = () => {
     };
 
     const resetMobile = () => {
-        setIsMobile(window.innerWidth <= 813);
+        setIsMobile(window.innerWidth <= 825);
     };
 
     const submitRaceName = (event) => {
@@ -212,7 +212,7 @@ const App = () => {
 
         setAttempt(attempt + 1);
         setPassword('');
-    }
+    };
 
     const shift = (event) => {
         event.preventDefault();
@@ -226,7 +226,7 @@ const App = () => {
             setShiftDown(false);
             setBoardView(newView);
         }
-    }
+    };
     
     const mountLevel = () => {
         let newFullBoard = (() => {
@@ -255,7 +255,7 @@ const App = () => {
         setFullBoard(newFullBoard);
         setBoardView(newBoard);
         setStart(true);
-    }
+    };
 
     const syncView = () => {
         let newView = [];
@@ -264,7 +264,7 @@ const App = () => {
         }
 
         setBoardView(newView);
-    }
+    };
 
     const findBro = () => {
         for (let row = 0; row < fullBoard.length; row++) {
@@ -289,7 +289,7 @@ const App = () => {
                 }
             }
         }
-    }
+    };
 
     const broDirection = (boolean) => {
         setBroRight(boolean);
@@ -298,7 +298,7 @@ const App = () => {
             newBoard[brocation.row][brocation.col] = './images/dudeLeft.png';
         
         setFullBoard(newBoard);
-    }
+    };
 
 /* //////////////////////  MOVE  ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -778,7 +778,7 @@ const App = () => {
         } else {
             return;
         }
-    }
+    };
 
 /* ///////////////////////  VIEW   ///////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////*/
@@ -871,13 +871,13 @@ const App = () => {
             setViewLocation(location);
             setShiftDown(true);
         }
-    }
+    };
 
     const checkWin = () => {
         if (brocation.row === doorLocation.row && brocation.col === doorLocation.col) {
             setLevel(level + 1)
         }
-    }
+    };
 
     return (
         <div className="main-container">
@@ -968,7 +968,7 @@ const App = () => {
             <div className="mobile-buttons-placeholder"></div>
             {isMobile && <MobileButtons shiftDown={shiftDown} setShiftDown={setShiftDown}/>}
         </div>
-    )
-}
+    );
+};
 
 export default App;

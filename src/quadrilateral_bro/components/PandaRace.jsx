@@ -9,7 +9,7 @@ const PandaRace = ({ submitRaceName, raceName, setRaceName, highScore }) => {
     if (e.target.value.length <= 8) {
       setRaceName(e);
     }
-  }
+  };
 
   return (
     ReactDOM.createPortal(
@@ -48,7 +48,7 @@ const PandaRace = ({ submitRaceName, raceName, setRaceName, highScore }) => {
       ,
       document.getElementById('password')
     )
-  )
-}
+  );
+};
 
 export default PandaRace;

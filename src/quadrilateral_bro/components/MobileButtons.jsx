@@ -17,7 +17,7 @@ const MobileButtons = ({ shiftDown, setShiftDown }) => {
     });
 
     document.dispatchEvent(e);
-  }
+  };
 
   const handleShiftUp = (key) => {
     setShiftDown(false);
@@ -29,13 +29,14 @@ const MobileButtons = ({ shiftDown, setShiftDown }) => {
     });
 
     document.dispatchEvent(e);
-  }
+  };
 
   return (
     ReactDOM.createPortal(
       <div id="button-viewPort-container">
         <div id="shift-button-container">
-          <div id="LRContainer">
+          <div id="shift-R-container">
+            <button className="LRButtons" onClick={() => handleClick('r')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'R'}</button>
             <button className="LRButtons" onMouseUp={() => handleShiftUp('Shift')} onMouseDown={() => handleClick('Shift')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'Shift'}</button>
           </div>
         </div>
@@ -55,7 +56,7 @@ const MobileButtons = ({ shiftDown, setShiftDown }) => {
       </div>,
     document.getElementById('popup')
     )
-  )
-}
+  );
+};
 
 export default MobileButtons;

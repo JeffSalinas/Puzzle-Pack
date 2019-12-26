@@ -23,7 +23,7 @@ const Popup = (props) => {
       </div>,
       document.getElementById('popup')
     )
-  )
-}
+  );
+};
 
 export default Popup;
