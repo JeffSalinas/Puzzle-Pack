@@ -1,14 +1,21 @@
+@media screen and (max-width: 600px) {
+
+}
+
+
 #button-viewPort-container {
-  height: 100vh;
+  height: 290px;
   width: 100vw;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   position: absolute;
 }
 
 #viewPort-place-holder {
   min-width: 434px;
   margin: auto;
+  z-index: -5;
 }
 
 .main-container {
@@ -283,18 +290,25 @@ li {
   width: 154px;
   height: 206px;
   padding: 5px;
+  z-index: 5;
 }
 
 .UDContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 5;
 }
 
 #LRContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 5;
+}
+
+#shift-button-container {
+  z-index: 5;
 }
 
 .LRButtons {

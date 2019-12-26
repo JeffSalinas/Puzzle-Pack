@@ -52,7 +52,7 @@ app.get('/users', (req, res) => {
       res.status(200).send(newFormat);
     })
     .catch(err => {
-      res.status(500).end();
+      res.status(500).send(err);
     });
 });
 

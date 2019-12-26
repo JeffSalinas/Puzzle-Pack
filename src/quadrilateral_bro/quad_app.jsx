@@ -18,7 +18,7 @@ const App = () => {
     const [ broRight, setBroRight ] = useState(true);
     const [ doorLocation, setDoorLocation ] = useState({ row: 0, col: 0 });
     const [ fullBoard, setFullBoard ] = useState([]);
-    const [ highScore, setHighScore ] = useState([]);
+    const [ highScore, setHighScore ] = useState([[{ name: 'Jeff', time: '2:01' }], [{ name: 'Jeff', time: '2:01' }]]);
     const [ keyTracker, setKeyTracker ] = useState(true);
     const [ level, setLevel ] = useState(0);
     const [ pandaScreen, setPandaScreen ] = useState(false);
@@ -31,10 +31,19 @@ const App = () => {
     const [ startTime, setStartTime ] = useState('')
     const [ time, setTime ] = useState(['0', '00']);
     const [ viewLocation, setViewLocation ] = useState({ row: 0, col: 0 });
+    const [ isMobile, setIsMobile ] = useState(window.innerWidth <= 813);
     var tick;
     
     useEffect (() => {
         getData();
+    }, []);
+
+    useEffect (() => {
+        window.addEventListener("resize", resetMobile);
+
+        return () => {
+            window.removeEventListener("resize", resetMobile);
+        }
     }, []);
 
     useEffect (() => {
@@ -157,7 +166,11 @@ const App = () => {
 
             setHighScore([data, top3]);
         })
-    }
+    };
+
+    const resetMobile = () => {
+        setIsMobile(window.innerWidth <= 813);
+    };
 
     const submitRaceName = (event) => {
         event.preventDefault();
@@ -291,6 +304,7 @@ const App = () => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////*/
     const move = (event) => {
         event.preventDefault();
+        console.log(event)
         let newBoard = fullBoard.slice();
 
         if (pswdScreen) {
@@ -775,12 +789,14 @@ const App = () => {
                 row: boardLocation.row,
                 col: boardLocation.col
             };
-
+            
             setViewLocation(location)
         }
-
+        console.log(viewLocation.col);
+        
         if (event.key === 'ArrowLeft') {
             if (viewLocation.col === 0) {
+                console.log(event.key)
                 return;
             }
 
@@ -799,6 +815,7 @@ const App = () => {
             setShiftDown(true);
 
         } else if (event.key === 'ArrowRight') {
+            console.log('hi')
             if (viewLocation.col + 17 === fullBoard[0].length - 1) {
                 return;
             }
@@ -949,7 +966,7 @@ const App = () => {
                 </div>}
             </div>
             <div className="mobile-buttons-placeholder"></div>
-            <MobileButtons />
+            {isMobile && <MobileButtons shiftDown={shiftDown} setShiftDown={setShiftDown}/>}
         </div>
     )
 }
