@@ -8,6 +8,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 const MobileButtons = ({ shiftDown, setShiftDown }) => {
 
   const handleClick = (key) => {
+    console.log('down');
 
     var e = new KeyboardEvent("keydown", {
       cancelable: true,
@@ -20,7 +21,7 @@ const MobileButtons = ({ shiftDown, setShiftDown }) => {
 
   const handleShiftUp = (key) => {
     setShiftDown(false);
-
+    console.log('up')
     var e = new KeyboardEvent("keyup", {
       cancelable: true,
       key: key,
@@ -34,9 +35,9 @@ const MobileButtons = ({ shiftDown, setShiftDown }) => {
     ReactDOM.createPortal(
       <div id="button-viewPort-container">
         <div id="shift-button-container">
-          <div id="shift-R-container">
-            <button className="LRButtons disable-dbl-tap-zoom" onClick={() => handleClick('r')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'R'}</button>
-            <button className="LRButtons disable-dbl-tap-zoom noselect" onMouseUp={() => handleShiftUp('Shift')} onMouseDown={() => handleClick('Shift')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'Shift'}</button>
+          <div id="shift-R-container" >
+            <button className="LRButtons disable-dbl-tap-zoom noselect" onClick={() => handleClick('r')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'R'}</button>
+            <button className="LRButtons disable-dbl-tap-zoom noselect" onTouchEnd={() => handleShiftUp('Shift')} onTouchStart={() => handleClick('Shift')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'Shift'}</button>
           </div>
         </div>
         <div id="viewPort-place-holder"></div>

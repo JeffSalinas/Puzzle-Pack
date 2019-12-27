@@ -321,6 +321,7 @@ li {
   width: 55px;
   border-radius: 27px;
   outline: none;
+  z-index: 50;
 }
 
 .UDButtons {
@@ -337,6 +338,7 @@ li {
 .shift-placeholder {
   min-width: 57px;
   height: 100%;
+  z-index: -10;
 }
 
 .mobile-buttons-placeholder {
