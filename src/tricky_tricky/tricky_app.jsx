@@ -345,8 +345,10 @@ class App extends Component {
     render() {
 
         return (
-            <div className="viewPort">
-                <div id="container">
+            <div className="main-container">
+                <div className="shift-placeholder"></div>
+                <div className="viewPort" >
+                    <div id="quadGameBoard">
                     { this.state.start ? <Popup level={levels[levelArray[this.state.level]]} currentlvl={this.state.level + 1}/> : null }
                     {this.state.outOfMoves ? <Out /> : null }
                     {this.state.pswdScreen ? <Password />: null}
@@ -387,6 +389,7 @@ class App extends Component {
                     <div id="bottomSpace"></div>
                 </div>
                 <div id="home_container">
+                    <p id="timer_display">{'Lvl: ' + (this.state.level + 1)}</p>
                     <NavLink to='/'>    
                         <button id="homebutton">Home</button>
                     </NavLink>
@@ -403,6 +406,8 @@ class App extends Component {
                     <li>Use <strong>Arrow Keys</strong> to move selector</li>
                     <li>Use <strong>Enter</strong> to swap the blocks in the selector window</li>
                 </ul>
+                </div>
+                <div className="mobile-buttons-placeholder"></div>
                 {this.state.isMobile && <MobileButtons />}
             </div>
         )
