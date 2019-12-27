@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
@@ -6,22 +6,24 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 const MobileButtons = ({ shiftDown, setShiftDown }) => {
+  const [ mobileShift, setMobileShift ] = useState(false);
 
   const handleClick = (key) => {
     console.log('down');
+    setMobileShift(true)
 
     var e = new KeyboardEvent("keydown", {
       cancelable: true,
       key: key,
-      shiftKey: key === 'Shift' ? true : shiftDown,
+      shiftKey: key === 'Shift' ? true : mobileShift,
     });
 
     document.dispatchEvent(e);
   };
 
   const handleShiftUp = (key) => {
-    setShiftDown(false);
     console.log('up')
+    setMobileShift(false);
     var e = new KeyboardEvent("keyup", {
       cancelable: true,
       key: key,
