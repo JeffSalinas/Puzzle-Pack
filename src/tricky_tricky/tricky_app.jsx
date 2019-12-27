@@ -406,6 +406,7 @@ class App extends Component {
                 <ul>
                     <li>Use <strong>Arrow Keys</strong> to move selector</li>
                     <li>Use <strong>Enter</strong> to swap the blocks in the selector window</li>
+                    <li>Gravity pulls to the left! Tricky Tricky!</li>
                 </ul>
                 </div>
                 <div className="mobile-buttons-placeholder"></div>
