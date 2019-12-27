@@ -56,7 +56,7 @@ const App = () => {
             let newTime = Number(time[1]);
             newTime += Number(time[0]) * 60
     
-            Axios.post('./user', {
+            Axios.post('http://18.191.252.157/user', {
                 userName: raceName,
                 seconds: newTime
             })
@@ -156,7 +156,7 @@ const App = () => {
     }, [time, startTime]);
 
     const getData = () => {
-        Axios.get('./users')
+        Axios.get('http://18.191.252.157/users')
         .then(({ data }) => {
             let top3 = [];
 
