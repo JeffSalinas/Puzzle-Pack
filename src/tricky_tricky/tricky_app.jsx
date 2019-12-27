@@ -43,7 +43,7 @@ class App extends Component {
 
     resetMobile() {
         this.setState({isMobile: window.innerWidth <= 825});
-    };
+    }
 
     routeKeydown(event) {
         if (event.target.nodeName == 'INPUT') {
@@ -54,6 +54,7 @@ class App extends Component {
     }
 
     passwordHandler(event) {
+
         if (event.key === 'Enter') {
 
             for (let lvl = 0; lvl < levelArray.length; lvl++) {
@@ -115,6 +116,7 @@ class App extends Component {
     }
 
     move(event) {
+        event.preventDefault();
         if (this.state.pswdScreen) {
             if (this.state.start) {
                 this.setState(() => { return { pswdScreen: false}; });
@@ -343,7 +345,6 @@ class App extends Component {
     }
 
     render() {
-
         return (
             <div className="main-container">
                 <div className="shift-placeholder"></div>
@@ -410,8 +411,8 @@ class App extends Component {
                 <div className="mobile-buttons-placeholder"></div>
                 {this.state.isMobile && <MobileButtons />}
             </div>
-        )
+        );
     }
-}
+};
 
 export default App;
