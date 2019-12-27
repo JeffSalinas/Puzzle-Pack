@@ -24,6 +24,7 @@ const MobileButtons = ({ shiftDown, setShiftDown }) => {
   const handleShiftUp = (key) => {
     console.log('up')
     setMobileShift(false);
+    setShiftDown(false);
     var e = new KeyboardEvent("keyup", {
       cancelable: true,
       key: key,
