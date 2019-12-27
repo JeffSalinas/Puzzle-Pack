@@ -35,21 +35,21 @@ const MobileButtons = ({ shiftDown, setShiftDown }) => {
       <div id="button-viewPort-container">
         <div id="shift-button-container">
           <div id="shift-R-container">
-            <button className="LRButtons" onClick={() => handleClick('r')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'R'}</button>
-            <button className="LRButtons" onMouseUp={() => handleShiftUp('Shift')} onMouseDown={() => handleClick('Shift')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'Shift'}</button>
+            <button className="LRButtons disable-dbl-tap-zoom" onClick={() => handleClick('r')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'R'}</button>
+            <button className="LRButtons disable-dbl-tap-zoom noselect" onMouseUp={() => handleShiftUp('Shift')} onMouseDown={() => handleClick('Shift')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'Shift'}</button>
           </div>
         </div>
         <div id="viewPort-place-holder"></div>
         <div id="mobile-button-container">
           <div className="UDContainer">
-            <button className="UDButtons" onClick={() => handleClick('ArrowUp')}><ArrowDropUpIcon fontSize="large" /> </button>
+            <button className="UDButtons disable-dbl-tap-zoom" onClick={() => handleClick('ArrowUp')}><ArrowDropUpIcon fontSize="large" /> </button>
           </div>
           <div id="LRContainer">
-            <button className="LRButtons" onClick={() => handleClick('ArrowLeft')}><ArrowLeftIcon fontSize="large" /></button>
-            <button className="LRButtons" onClick={() => handleClick('ArrowRight')}><ArrowRightIcon fontSize="large" /></button>
+            <button className="LRButtons disable-dbl-tap-zoom" onClick={() => handleClick('ArrowLeft')}><ArrowLeftIcon fontSize="large" /></button>
+            <button className="LRButtons disable-dbl-tap-zoom" onClick={() => handleClick('ArrowRight')}><ArrowRightIcon fontSize="large" /></button>
           </div>
           <div className="UDContainer">
-            <button className="UDButtons" onClick={() => handleClick('ArrowDown')}><ArrowDropDownIcon fontSize="large" /></button>
+            <button className="UDButtons disable-dbl-tap-zoom" onClick={() => handleClick('ArrowDown')}><ArrowDropDownIcon fontSize="large" /></button>
           </div>
         </div>
       </div>,
