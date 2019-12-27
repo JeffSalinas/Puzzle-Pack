@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
-const MobileButtons = ({ shiftDown, setShiftDown }) => {
+const MobileButtons = () => {
   const [ mobileShift, setMobileShift ] = useState(false);
 
   const handleClick = (key) => {
-    console.log('down');
-    setMobileShift(true)
+    if (key === 'Shift') {
+      setMobileShift(!mobileShift)
+    }
 
     var e = new KeyboardEvent("keydown", {
       cancelable: true,
@@ -21,18 +22,17 @@ const MobileButtons = ({ shiftDown, setShiftDown }) => {
     document.dispatchEvent(e);
   };
 
-  const handleShiftUp = (key) => {
-    console.log('up')
-    setMobileShift(false);
-    setShiftDown(false);
-    var e = new KeyboardEvent("keyup", {
-      cancelable: true,
-      key: key,
-      shiftKey: false,
-    });
-
-    document.dispatchEvent(e);
-  };
+  useEffect(() => {
+    if(!mobileShift) {
+      var e = new KeyboardEvent("keyup", {
+        cancelable: true,
+        key: 'Shift',
+        shiftKey: false,
+      })
+      document.dispatchEvent(e);
+    }
+  }, [mobileShift]);
+  
 
   return (
     ReactDOM.createPortal(
@@ -40,7 +40,7 @@ const MobileButtons = ({ shiftDown, setShiftDown }) => {
         <div id="shift-button-container">
           <div id="shift-R-container" >
             <button className="LRButtons disable-dbl-tap-zoom noselect" onClick={() => handleClick('r')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'R'}</button>
-            <button className="LRButtons disable-dbl-tap-zoom noselect" onTouchEnd={() => handleShiftUp('Shift')} onTouchStart={() => handleClick('Shift')} style={{fontWeight: 'bold', fontSize: '15px'}} >{'Shift'}</button>
+            <button className="LRButtons disable-dbl-tap-zoom noselect" onClick={() => handleClick('Shift')} style={{fontWeight: 'bold', fontSize: '15px', backgroundColor: `${mobileShift ? 'gray': 'white'}`}} >{mobileShift ? 'Shift Down' : 'Shift'}</button>
           </div>
         </div>
         <div id="viewPort-place-holder"></div>
